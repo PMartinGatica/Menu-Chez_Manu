@@ -151,9 +151,11 @@ function doGet(e) {
     response = { error: error.toString() };
   }
 
-  return ContentService
-    .createTextOutput(JSON.stringify(response))
-    .setMimeType(ContentService.MimeType.JSON);
+  // Respuesta con headers CORS
+  const output = ContentService.createTextOutput(JSON.stringify(response));
+  output.setMimeType(ContentService.MimeType.JSON);
+
+  return output;
 }
 
 function doPost(e) {

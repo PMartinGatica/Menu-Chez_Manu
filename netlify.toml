@@ -1,0 +1,47 @@
+# Configuración de Netlify para Chez Manu
+
+[build]
+  publish = "."
+
+# Proxy para evitar CORS con Google Apps Script
+[[redirects]]
+  from = "/api/*"
+  to = "https://script.google.com/macros/s/AKfycbxZcIwVwn59YjtB1SWHxgt5fwrBnb4CIDlEPL9SJMeJGAu3i1JLD39SRCx9UEOSm7X8/exec:splat"
+  status = 200
+  force = true
+
+# Headers de seguridad
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer-when-downgrade"
+
+# Cache para archivos estáticos
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# No cache para HTML
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

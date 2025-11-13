@@ -80,11 +80,23 @@ async function loadMenu() {
     showLoader(true);
 
     try {
-        const response = await fetch(`${API_URL}?action=getMenu`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        // Usar proxy de Netlify (configurado en netlify.toml)
+        // En producción usa /api/, en local usa la URL directa
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+
+        let apiEndpoint;
+        if (isLocal) {
+            // Modo local: usar proxy externo
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+            const targetUrl = encodeURIComponent(`${API_URL}?action=getMenu`);
+            apiEndpoint = `${proxyUrl}${targetUrl}`;
+        } else {
+            // Modo producción: usar proxy de Netlify
+            apiEndpoint = '/api/?action=getMenu';
+        }
+
+        const response = await fetch(apiEndpoint, {
+            method: 'GET'
         });
 
         if (!response.ok) {
