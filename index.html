@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chez Manu - Restaurant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header con Logo -->
+        <header class="header">
+            <div class="logo-container">
+                <img src="chezmanulogo.jpg" alt="Chez Manu Restaurant" class="logo-image">
+            </div>
+        </header>
+
+        <!-- Navegación de Categorías -->
+        <nav class="menu-nav">
+            <button class="nav-btn active" data-category="entrees">Nos Entrées</button>
+            <button class="nav-btn" data-category="plats">Nos Assiettes Principales</button>
+            <button class="nav-btn" data-category="desserts">Nos desserts</button>
+        </nav>
+
+        <!-- Loader -->
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p>Cargando menú...</p>
+        </div>
+
+        <!-- Contenedor del Menú -->
+        <main class="menu-content" id="menuContent">
+            <!-- Entrées -->
+            <section class="menu-section" id="entrees-section">
+                <h2 class="section-title">Nos Entrées</h2>
+                <div class="menu-items" id="entrees-items"></div>
+            </section>
+
+            <!-- Plats Principaux -->
+            <section class="menu-section" id="plats-section" style="display: none;">
+                <h2 class="section-title">Nos Assiettes Principales</h2>
+
+                <!-- Subsección La Mer -->
+                <div class="subsection">
+                    <h3 class="subsection-title">La Mer</h3>
+                    <div class="menu-items" id="plats-mer-items"></div>
+                </div>
+
+                <!-- Subsección La Terre -->
+                <div class="subsection">
+                    <h3 class="subsection-title">La Terre</h3>
+                    <div class="menu-items" id="plats-terre-items"></div>
+                </div>
+            </section>
+
+            <!-- Desserts -->
+            <section class="menu-section" id="desserts-section" style="display: none;">
+                <h2 class="section-title">Nos desserts</h2>
+                <div class="menu-items" id="desserts-items"></div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Última actualización: <span id="lastUpdate">--</span></p>
+        </footer>
+    </div>
+
+    <!-- Configuración de API -->
+    <script>
+        // URL de Google Apps Script
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwv6Toiiy5vzaV3ci5UvyrTKF9k_05h0YDD-Ia5ripoLWQ07D9cfSTb158icomWoCkn/exec';
+    </script>
+
+    <script src="app.js"></script>
+</body>
+</html>

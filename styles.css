@@ -1,0 +1,340 @@
+/* ============================================
+   CHEZ MANU - ESTILOS
+   ============================================ */
+
+/* Reset y Variables */
+:root {
+    --primary-color: #8B0000;
+    --secondary-color: #333;
+    --text-color: #2c2c2c;
+    --light-gray: #f5f5f5;
+    --border-color: #e0e0e0;
+    --accent-red: #B22222;
+    --background: #FEFEFE;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--text-color);
+    background-color: var(--background);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    min-height: 100vh;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   HEADER Y LOGO
+   ============================================ */
+
+.header {
+    text-align: center;
+    padding: 40px 20px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 30px;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-title {
+    font-size: 2.5rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: var(--secondary-color);
+    margin: 0;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+}
+
+.logo-image {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+/* ============================================
+   NAVEGACIÓN
+   ============================================ */
+
+.menu-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    padding: 0 20px;
+}
+
+.nav-btn {
+    padding: 12px 24px;
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-size: 1rem;
+    font-family: 'Georgia', serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0;
+    font-style: italic;
+}
+
+.nav-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.nav-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* ============================================
+   LOADER
+   ============================================ */
+
+.loader {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.spinner {
+    border: 3px solid var(--light-gray);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loader p {
+    color: #666;
+    font-style: italic;
+}
+
+/* ============================================
+   MENÚ SECTIONS
+   ============================================ */
+
+.menu-content {
+    padding: 0 20px;
+}
+
+.menu-section {
+    margin-bottom: 50px;
+}
+
+.section-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 400;
+    font-style: italic;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.subsection {
+    margin-bottom: 40px;
+}
+
+.subsection-title {
+    font-size: 1.4rem;
+    color: #4169E1;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 400;
+    font-style: italic;
+}
+
+/* ============================================
+   ITEMS DEL MENÚ
+   ============================================ */
+
+.menu-items {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.menu-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-item:hover {
+    transform: translateY(-2px);
+}
+
+.item-name-es {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 8px;
+    font-weight: 400;
+}
+
+.item-name-en {
+    font-size: 1rem;
+    color: #666;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.item-description-es,
+.item-description-en {
+    font-size: 0.9rem;
+    color: #777;
+    margin: 5px 0;
+}
+
+.item-description-en {
+    font-style: italic;
+}
+
+.item-price {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-top: 12px;
+    font-style: italic;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+.footer {
+    text-align: center;
+    padding: 30px 20px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 50px;
+    color: #999;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .logo-title {
+        font-size: 2rem;
+    }
+
+    .menu-nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nav-btn {
+        width: 100%;
+        padding: 14px;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .subsection-title {
+        font-size: 1.2rem;
+    }
+
+    .item-name-es {
+        font-size: 1rem;
+    }
+
+    .item-name-en {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-title {
+        font-size: 1.7rem;
+    }
+
+    .menu-content {
+        padding: 0 10px;
+    }
+
+    .menu-item {
+        padding: 15px 0;
+    }
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estado oculto */
+.hidden {
+    display: none !important;
+}
+
+/* ============================================
+   ESTILOS DE IMPRESIÓN
+   ============================================ */
+
+@media print {
+    .menu-nav,
+    .footer {
+        display: none;
+    }
+
+    .container {
+        box-shadow: none;
+    }
+
+    .menu-item {
+        page-break-inside: avoid;
+    }
+}
