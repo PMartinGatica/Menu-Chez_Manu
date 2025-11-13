@@ -1,5 +1,5 @@
 /* ============================================
-   CHEZ MANU - ESTILOS
+   CHEZ MANU - ESTILOS OPTIMIZADOS
    ============================================ */
 
 /* Reset y Variables */
@@ -11,6 +11,13 @@
     --border-color: #e0e0e0;
     --accent-red: #B22222;
     --background: #FEFEFE;
+    --transition-speed: 0.3s;
+}
+
+/* Optimización de fuentes con font-display */
+@font-face {
+    font-family: 'Georgia';
+    font-display: swap; /* Mejora LCP */
 }
 
 * {
@@ -24,6 +31,10 @@ body {
     color: var(--text-color);
     background-color: var(--background);
     line-height: 1.6;
+    /* Optimizaciones de renderizado */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 .container {
@@ -68,6 +79,9 @@ body {
     height: auto;
     margin: 0 auto;
     display: block;
+    /* Optimización de carga de imagen */
+    loading: lazy;
+    will-change: transform;
 }
 
 /* ============================================
@@ -91,9 +105,12 @@ body {
     font-size: 1rem;
     font-family: 'Georgia', serif;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     border-radius: 0;
     font-style: italic;
+    /* Optimización de performance */
+    will-change: background-color, color;
+    transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .nav-btn:hover {
@@ -337,4 +354,60 @@ body {
     .menu-item {
         page-break-inside: avoid;
     }
+}
+
+/* ============================================
+   OPTIMIZACIONES DE RENDIMIENTO
+   ============================================ */
+
+/* Mejora el scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Contenido crítico visible mientras carga */
+.menu-content {
+    content-visibility: auto;
+    contain-intrinsic-size: 1000px;
+}
+
+/* Optimizar animaciones para GPU */
+.menu-item,
+.nav-btn,
+.fade-in {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Prevenir FOUC (Flash of Unstyled Content) */
+body:not(.loaded) {
+    opacity: 0;
+}
+
+body.loaded {
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+}
+
+/* Optimización de scroll en móviles */
+@media (max-width: 768px) {
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Lazy loading de imágenes */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity var(--transition-speed);
+}
+
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* Performance hint para el navegador */
+.menu-section {
+    contain: layout style paint;
 }

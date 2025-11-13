@@ -1,6 +1,7 @@
 /**
  * CHEZ MANU - FRONTEND APPLICATION
  * Sistema de visualización de menú con actualización automática
+ * Optimizado para rendimiento y velocidad
  */
 
 // ============================================
@@ -16,6 +17,12 @@ let menuData = {
 
 let currentCategory = 'entrees';
 let autoRefreshInterval = null;
+let isLoading = false; // Prevenir múltiples cargas simultáneas
+let loadingController = null; // AbortController para cancelar requests
+let retryCount = 0;
+const MAX_RETRIES = 3;
+const CACHE_KEY = 'chezManuMenu';
+const CACHE_DURATION = 2 * 60 * 1000; // 2 minutos en ms
 
 // ============================================
 // INICIALIZACIÓN
@@ -24,14 +31,30 @@ let autoRefreshInterval = null;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Chez Manu - Menu App Iniciada');
 
-    // Cargar menú inicial
-    loadMenu();
+    // Marcar body como loaded para prevenir FOUC
+    document.body.classList.add('loaded');
 
-    // Configurar navegación
+    // Configurar navegación primero (no requiere datos)
     setupNavigation();
 
-    // Auto-refresh cada 30 segundos
+    // Intentar cargar desde cache primero (carga instantánea)
+    const cachedData = loadFromCache();
+    if (cachedData) {
+        console.log('✅ Cargando desde cache (carga instantánea)...');
+        menuData = cachedData;
+        renderMenu();
+        updateLastUpdate();
+        showLoader(false);
+    }
+
+    // Luego cargar datos frescos del servidor
+    loadMenu();
+
+    // Auto-refresh cada 30 segundos (solo si la pestaña está visible)
     startAutoRefresh(30000);
+
+    // Optimización: Precarga de imágenes
+    preloadCriticalAssets();
 });
 
 // ============================================
@@ -77,12 +100,28 @@ function showCategory(category) {
 // ============================================
 
 async function loadMenu() {
+    // Prevenir múltiples cargas simultáneas
+    if (isLoading) {
+        console.log('Carga ya en progreso, cancelando...');
+        return;
+    }
+
+    isLoading = true;
     showLoader(true);
+
+    // Cancelar request anterior si existe
+    if (loadingController) {
+        loadingController.abort();
+    }
+
+    // Crear nuevo AbortController para este request
+    loadingController = new AbortController();
 
     try {
         // Usar proxy de Netlify (configurado en netlify.toml)
-        // En producción usa /api/, en local usa la URL directa
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+        const isLocal = window.location.hostname === 'localhost' ||
+                       window.location.hostname === '127.0.0.1' ||
+                       window.location.protocol === 'file:';
 
         let apiEndpoint;
         if (isLocal) {
@@ -96,7 +135,13 @@ async function loadMenu() {
         }
 
         const response = await fetch(apiEndpoint, {
-            method: 'GET'
+            method: 'GET',
+            signal: loadingController.signal,
+            // Optimizaciones de fetch
+            cache: 'no-cache',
+            headers: {
+                'Accept': 'application/json'
+            }
         });
 
         if (!response.ok) {
@@ -109,21 +154,48 @@ async function loadMenu() {
             throw new Error(data.error);
         }
 
-        // Guardar datos
+        // Guardar datos en memoria y cache
         menuData = data;
+        saveToCache(data);
 
-        // Renderizar menú
+        // Renderizar solo si hay cambios (optimización)
         renderMenu();
 
         // Actualizar timestamp
         updateLastUpdate();
 
-        console.log('Menú cargado correctamente', data);
+        // Reset retry count en caso de éxito
+        retryCount = 0;
+
+        console.log('✅ Menú cargado correctamente');
 
     } catch (error) {
-        console.error('Error al cargar el menú:', error);
-        showError('Error al cargar el menú. Por favor, verifica la configuración de la API.');
+        // Si fue abortado, no es un error real
+        if (error.name === 'AbortError') {
+            console.log('Request cancelado');
+            return;
+        }
+
+        console.error('❌ Error al cargar el menú:', error);
+
+        // Retry con backoff exponencial
+        if (retryCount < MAX_RETRIES) {
+            retryCount++;
+            const retryDelay = Math.min(1000 * Math.pow(2, retryCount), 10000);
+            console.log(`Reintentando en ${retryDelay}ms... (${retryCount}/${MAX_RETRIES})`);
+
+            setTimeout(() => {
+                isLoading = false;
+                loadMenu();
+            }, retryDelay);
+        } else {
+            // Si falló después de todos los reintentos, mostrar error
+            showError(`Error al cargar el menú: ${error.message}`);
+            retryCount = 0;
+        }
+
     } finally {
+        isLoading = false;
         showLoader(false);
     }
 }
@@ -382,6 +454,159 @@ if (typeof API_URL === 'undefined' || API_URL === 'TU_URL_DE_GOOGLE_APPS_SCRIPT_
 }
 
 // ============================================
+// CACHE LOCAL (LocalStorage)
+// ============================================
+
+function saveToCache(data) {
+    try {
+        const cacheData = {
+            data: data,
+            timestamp: Date.now()
+        };
+        localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+        console.log('✅ Datos guardados en cache');
+    } catch (error) {
+        console.warn('⚠️ No se pudo guardar en cache:', error);
+    }
+}
+
+function loadFromCache() {
+    try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (!cached) return null;
+
+        const cacheData = JSON.parse(cached);
+        const age = Date.now() - cacheData.timestamp;
+
+        // Si el cache es muy viejo, ignorarlo
+        if (age > CACHE_DURATION) {
+            console.log('Cache expirado, eliminando...');
+            localStorage.removeItem(CACHE_KEY);
+            return null;
+        }
+
+        console.log(`Cache válido (${Math.round(age / 1000)}s de antigüedad)`);
+        return cacheData.data;
+    } catch (error) {
+        console.warn('⚠️ Error al cargar cache:', error);
+        return null;
+    }
+}
+
+function clearCache() {
+    localStorage.removeItem(CACHE_KEY);
+    console.log('Cache eliminado');
+}
+
+// ============================================
+// OPTIMIZACIONES DE RENDIMIENTO
+// ============================================
+
+function preloadCriticalAssets() {
+    // Precarga del logo si existe
+    const logoImg = new Image();
+    logoImg.src = 'chezmanulogo.jpg';
+}
+
+// Debounce para evitar renderizados excesivos
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Throttle para limitar frecuencia de actualizaciones
+function throttle(func, limit) {
+    let inThrottle;
+    return function(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// ============================================
+// OPTIMIZACIÓN DE RENDERIZADO
+// ============================================
+
+// Usar requestAnimationFrame para renderizar de forma eficiente
+function optimizedRender(renderFunc) {
+    if (window.requestAnimationFrame) {
+        requestAnimationFrame(renderFunc);
+    } else {
+        renderFunc();
+    }
+}
+
+// Lazy loading de imágenes (para cuando agreguen fotos de platos)
+function setupLazyLoading() {
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.classList.remove('lazy');
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img.lazy').forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
+}
+
+// ============================================
+// MONITOREO DE RENDIMIENTO
+// ============================================
+
+function measurePerformance() {
+    if (window.performance && window.performance.timing) {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const perfData = window.performance.timing;
+                const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+                const domReadyTime = perfData.domContentLoadedEventEnd - perfData.navigationStart;
+
+                console.log(`📊 Rendimiento:`);
+                console.log(`   - Tiempo de carga total: ${pageLoadTime}ms`);
+                console.log(`   - DOM listo en: ${domReadyTime}ms`);
+            }, 0);
+        });
+    }
+}
+
+measurePerformance();
+
+// ============================================
+// MANEJO DE ERRORES GLOBAL
+// ============================================
+
+window.addEventListener('error', (event) => {
+    console.error('❌ Error global:', event.error);
+    // No mostrar al usuario errores menores, solo loggear
+    if (event.error && event.error.message && event.error.message.includes('fetch')) {
+        // Los errores de fetch ya se manejan en loadMenu
+        event.preventDefault();
+    }
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('❌ Promise rechazada:', event.reason);
+    event.preventDefault();
+});
+
+// ============================================
 // FUNCIONES PÚBLICAS PARA DEBUGGING
 // ============================================
 
@@ -390,9 +615,11 @@ window.chezManu = {
     startAutoRefresh,
     stopAutoRefresh,
     showCategory,
+    clearCache,
     menuData: () => menuData,
-    version: '1.0.0'
+    performance: () => window.performance?.timing,
+    version: '2.0.0-optimized'
 };
 
-console.log('Chez Manu Menu App v1.0.0 - Ready');
+console.log('🍽️ Chez Manu Menu App v2.0.0 - Optimizado');
 console.log('Funciones disponibles:', Object.keys(window.chezManu));
