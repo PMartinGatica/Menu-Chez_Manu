@@ -390,6 +390,15 @@ body.loaded {
     transition: opacity 0.3s ease-in;
 }
 
+/* Ocultar secciones no activas completamente */
+.menu-section {
+    display: none;
+}
+
+.menu-section:first-of-type {
+    display: block;
+}
+
 /* Optimización de scroll en móviles */
 @media (max-width: 768px) {
     body {

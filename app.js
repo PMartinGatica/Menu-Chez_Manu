@@ -22,7 +22,8 @@ let loadingController = null; // AbortController para cancelar requests
 let retryCount = 0;
 const MAX_RETRIES = 3;
 const CACHE_KEY = 'chezManuMenu';
-const CACHE_DURATION = 2 * 60 * 1000; // 2 minutos en ms
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 horas - solo refresca si hay cambios en Google Sheets
+const AUTO_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutos (solo chequea si hay cambios)
 
 // ============================================
 // INICIALIZACIÓN
@@ -45,13 +46,16 @@ document.addEventListener('DOMContentLoaded', () => {
         renderMenu();
         updateLastUpdate();
         showLoader(false);
+
+        // Solo chequear actualizaciones en segundo plano (no bloquea UI)
+        checkForUpdatesInBackground();
+    } else {
+        // Sin cache: cargar del servidor
+        loadMenu();
     }
 
-    // Luego cargar datos frescos del servidor
-    loadMenu();
-
-    // Auto-refresh cada 30 segundos (solo si la pestaña está visible)
-    startAutoRefresh(30000);
+    // Auto-refresh cada 5 minutos (solo chequea si hay cambios, no recarga siempre)
+    startAutoRefresh(AUTO_REFRESH_INTERVAL);
 
     // Optimización: Precarga de imágenes
     preloadCriticalAssets();
@@ -98,6 +102,56 @@ function showCategory(category) {
 // ============================================
 // CARGA DE DATOS
 // ============================================
+
+// Chequear actualizaciones en segundo plano (sin loader, sin interrumpir)
+async function checkForUpdatesInBackground() {
+    if (isLoading) return;
+
+    console.log('🔄 Chequeando actualizaciones en segundo plano...');
+
+    try {
+        const isLocal = window.location.hostname === 'localhost' ||
+                       window.location.hostname === '127.0.0.1' ||
+                       window.location.protocol === 'file:';
+
+        let apiEndpoint;
+        if (isLocal) {
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+            const targetUrl = encodeURIComponent(`${API_URL}?action=getMenu`);
+            apiEndpoint = `${proxyUrl}${targetUrl}`;
+        } else {
+            apiEndpoint = '/api/?action=getMenu';
+        }
+
+        const response = await fetch(apiEndpoint, {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+
+        // Comparar con datos actuales para ver si hay cambios
+        const hasChanges = JSON.stringify(menuData) !== JSON.stringify(data);
+
+        if (hasChanges) {
+            console.log('✨ Se detectaron cambios - Actualizando menú...');
+            menuData = data;
+            saveToCache(data);
+            renderMenu();
+            updateLastUpdate();
+        } else {
+            console.log('✅ No hay cambios - Menú actualizado');
+        }
+
+    } catch (error) {
+        console.warn('⚠️ Error al chequear actualizaciones:', error.message);
+        // No mostrar error al usuario, solo log
+    }
+}
 
 async function loadMenu() {
     // Prevenir múltiples cargas simultáneas
@@ -402,13 +456,13 @@ function startAutoRefresh(intervalMs = 30000) {
         clearInterval(autoRefreshInterval);
     }
 
-    // Crear nuevo intervalo
+    // Crear nuevo intervalo - solo chequea cambios en background
     autoRefreshInterval = setInterval(() => {
-        console.log('Auto-refresh: Actualizando menú...');
-        loadMenu();
+        console.log('Auto-refresh: Chequeando cambios...');
+        checkForUpdatesInBackground();
     }, intervalMs);
 
-    console.log(`Auto-refresh configurado cada ${intervalMs / 1000} segundos`);
+    console.log(`Auto-refresh configurado cada ${intervalMs / 1000} segundos (solo chequea cambios)`);
 }
 
 function stopAutoRefresh() {
@@ -429,8 +483,9 @@ document.addEventListener('visibilitychange', () => {
         stopAutoRefresh();
         console.log('Página oculta - Auto-refresh pausado');
     } else {
-        startAutoRefresh(30000);
-        loadMenu(); // Actualizar inmediatamente al volver
+        startAutoRefresh(AUTO_REFRESH_INTERVAL);
+        // Chequear cambios en segundo plano (sin loader)
+        checkForUpdatesInBackground();
         console.log('Página visible - Auto-refresh reanudado');
     }
 });
