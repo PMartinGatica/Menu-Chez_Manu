@@ -450,24 +450,35 @@ img[loading="lazy"].loaded {
 .vinos-list {
     margin-bottom: 25px;
     padding: 0 20px;
+    list-style: none;
 }
 
 .vino-item {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    padding-left: 15px;
+    position: relative;
+}
+
+.vino-item::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-weight: bold;
 }
 
 .vino-table {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px dotted var(--border-color);
+    align-items: baseline;
+    gap: 10px;
 }
 
 .vino-nombre {
     flex: 1;
     font-size: 1rem;
     color: var(--text-color);
+    line-height: 1.4;
 }
 
 .vino-precio {
@@ -475,7 +486,8 @@ img[loading="lazy"].loaded {
     color: var(--text-color);
     font-style: italic;
     white-space: nowrap;
-    margin-left: 15px;
+    margin-left: 10px;
+    font-weight: 500;
 }
 
 /* Responsive para vinos */
@@ -491,6 +503,10 @@ img[loading="lazy"].loaded {
 
     .vinos-list {
         padding: 0 10px;
+    }
+
+    .vino-item {
+        padding-left: 12px;
     }
 
     .vino-nombre {
