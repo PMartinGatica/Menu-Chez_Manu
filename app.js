@@ -26,6 +26,8 @@ const CACHE_KEY = 'chezManuMenu';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 horas - solo refresca si hay cambios en Google Sheets
 const AUTO_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutos (solo chequea si hay cambios)
 
+// Se asume que API_URL está definida en el HTML, cerca de la inclusión de este script.
+
 // ============================================
 // INICIALIZACIÓN
 // ============================================
@@ -112,10 +114,11 @@ async function checkForUpdatesInBackground() {
 
     try {
         const isLocal = window.location.hostname === 'localhost' ||
-                       window.location.hostname === '127.0.0.1' ||
-                       window.location.protocol === 'file:';
+                         window.location.hostname === '127.0.0.1' ||
+                         window.location.protocol === 'file:';
 
         let apiEndpoint;
+        // Asumiendo que API_URL está definida globalmente
         if (isLocal) {
             const proxyUrl = 'https://api.allorigins.win/raw?url=';
             const targetUrl = encodeURIComponent(`${API_URL}?action=getMenu`);
@@ -136,6 +139,7 @@ async function checkForUpdatesInBackground() {
         if (data.error) throw new Error(data.error);
 
         // Comparar con datos actuales para ver si hay cambios
+        // Usamos JSON.stringify para una comparación profunda simple
         const hasChanges = JSON.stringify(menuData) !== JSON.stringify(data);
 
         if (hasChanges) {
@@ -175,8 +179,8 @@ async function loadMenu() {
     try {
         // Usar proxy de Netlify (configurado en netlify.toml)
         const isLocal = window.location.hostname === 'localhost' ||
-                       window.location.hostname === '127.0.0.1' ||
-                       window.location.protocol === 'file:';
+                         window.location.hostname === '127.0.0.1' ||
+                         window.location.protocol === 'file:';
 
         let apiEndpoint;
         if (isLocal) {
@@ -213,7 +217,7 @@ async function loadMenu() {
         menuData = data;
         saveToCache(data);
 
-        // Renderizar solo si hay cambios (optimización)
+        // Renderizar
         renderMenu();
 
         // Actualizar timestamp
@@ -260,10 +264,17 @@ async function loadMenu() {
 // ============================================
 
 function renderMenu() {
-    renderEntrees();
-    renderPlats();
-    renderDesserts();
-    renderVinos();
+    // Usar requestAnimationFrame para renderizar de forma eficiente
+    optimizedRender(() => {
+        renderEntrees();
+        renderPlats();
+        renderDesserts();
+        renderVinos();
+        // Inicializar lazy loading después de renderizar contenido
+        setupLazyLoading(); 
+        // Mostrar la categoría activa al cargar
+        showCategory(currentCategory);
+    });
 }
 
 function renderEntrees() {
@@ -273,14 +284,15 @@ function renderEntrees() {
     container.innerHTML = '';
 
     if (!menuData.entrees || menuData.entrees.length === 0) {
-        container.innerHTML = '<p class="no-items">No hay entradas disponibles</p>';
+        container.innerHTML = '<p class="no-items">No hay entradas disponibles</p格納されています。`</p>'
         return;
     }
 
+    const fragment = document.createDocumentFragment();
     menuData.entrees.forEach(item => {
-        const itemElement = createMenuItem(item);
-        container.appendChild(itemElement);
+        fragment.appendChild(createMenuItem(item));
     });
+    container.appendChild(fragment);
 }
 
 function renderPlats() {
@@ -297,32 +309,34 @@ function renderPlats() {
         return;
     }
 
-    // Separar por subcategoría
-    const platsMer = menuData.plats.filter(item =>
-        item.subcategoria && item.subcategoria.toLowerCase().includes('mer')
-    );
-    const platsTerre = menuData.plats.filter(item =>
-        item.subcategoria && item.subcategoria.toLowerCase().includes('terre')
-    );
+    // Separar por subcategoría (optimizado)
+    const platsMer = [];
+    const platsTerre = [];
+    menuData.plats.forEach(item => {
+        const sub = item.subcategoria ? item.subcategoria.toLowerCase() : '';
+        if (sub.includes('mer')) {
+            platsMer.push(item);
+        } else if (sub.includes('terre')) {
+            platsTerre.push(item);
+        }
+    });
 
     // Renderizar La Mer
     if (platsMer.length === 0) {
         merContainer.innerHTML = '<p class="no-items">No hay platos del mar disponibles</p>';
     } else {
-        platsMer.forEach(item => {
-            const itemElement = createMenuItem(item);
-            merContainer.appendChild(itemElement);
-        });
+        const fragment = document.createDocumentFragment();
+        platsMer.forEach(item => fragment.appendChild(createMenuItem(item)));
+        merContainer.appendChild(fragment);
     }
 
     // Renderizar La Terre
     if (platsTerre.length === 0) {
         terreContainer.innerHTML = '<p class="no-items">No hay platos de tierra disponibles</p>';
     } else {
-        platsTerre.forEach(item => {
-            const itemElement = createMenuItem(item);
-            terreContainer.appendChild(itemElement);
-        });
+        const fragment = document.createDocumentFragment();
+        platsTerre.forEach(item => fragment.appendChild(createMenuItem(item)));
+        terreContainer.appendChild(fragment);
     }
 }
 
@@ -337,134 +351,163 @@ function renderDesserts() {
         return;
     }
 
+    const fragment = document.createDocumentFragment();
     menuData.desserts.forEach(item => {
-        const itemElement = createMenuItem(item);
-        container.appendChild(itemElement);
+        fragment.appendChild(createMenuItem(item));
     });
+    container.appendChild(fragment);
 }
 
+/**
+ * Función corregida y optimizada para renderizar los vinos dinámicamente.
+ * Se añadió un contenedor envolvente para cada categoría principal (vino-categoria-wrapper)
+ * para asegurar la correcta jerarquía y renderizado.
+ */
 function renderVinos() {
-    if (!menuData.vinos || menuData.vinos.length === 0) return;
+    // Contenedor principal de la sección de Vinos (asumiendo ID: vinos-items)
+    const mainContainer = document.getElementById('vinos-items');
+    if (!mainContainer) {
+        console.warn('⚠️ Contenedor principal de vinos no encontrado (#vinos-items)');
+        return;
+    }
 
-    // Agrupar vinos por categoría principal y varietal
-    const vinosPorCategoria = {};
+    mainContainer.innerHTML = ''; // Limpiar el contenido anterior
+
+    if (!menuData.vinos || menuData.vinos.length === 0) {
+        mainContainer.innerHTML = '<p class="no-items">No hay vinos disponibles</p>';
+        return;
+    }
+
+    // DEBUG CRÍTICO: Log the raw wine data received from the API
+    console.log('🍷 Datos de Vinos recibidos para renderizar:', menuData.vinos);
+
+    // 1. Agrupar vinos por Categoría Principal y Subcategoría (Varietal)
+    const agrupado = {};
 
     menuData.vinos.forEach(vino => {
         const subcategoria = vino.subcategoria || 'Otros';
-        if (!vinosPorCategoria[subcategoria]) {
-            vinosPorCategoria[subcategoria] = [];
+        // Ejemplo: 'Tintos Argentinos - Malbec' -> 'Tintos Argentinos' y 'Malbec'
+        const partes = subcategoria.split(' - ');
+        const categoriaPrincipal = partes[0].trim();
+        const varietal = partes[1] ? partes[1].trim() : '';
+
+        if (!agrupado[categoriaPrincipal]) {
+            agrupado[categoriaPrincipal] = {};
         }
-        vinosPorCategoria[subcategoria].push(vino);
+        if (!agrupado[categoriaPrincipal][varietal]) {
+            agrupado[categoriaPrincipal][varietal] = [];
+        }
+        agrupado[categoriaPrincipal][varietal].push(vino);
     });
 
-    // Debug: Mostrar todas las subcategorías recibidas
-    console.log('📊 Subcategorías recibidas del servidor:', Object.keys(vinosPorCategoria));
+    // 2. Renderizar la estructura
+    for (const categoriaPrincipal in agrupado) {
+        // Contenedor envolvente para toda la categoría principal
+        const categoriaWrapper = document.createElement('div');
+        categoriaWrapper.className = 'vino-categoria-wrapper';
+        
+        // Título de Categoría Principal (Ej: BLANCOS ARGENTINOS)
+        const catTitle = document.createElement('h3');
+        catTitle.className = 'vino-categoria-principal';
+        catTitle.textContent = categoriaPrincipal.toUpperCase();
+        categoriaWrapper.appendChild(catTitle);
 
-    // Renderizar cada categoría en su contenedor correspondiente
-    for (const subcategoria in vinosPorCategoria) {
-        const partes = subcategoria.split(' - ');
-        const categoriaPrincipal = partes[0];
-        const varietal = partes[1] || '';
+        for (const varietal in agrupado[categoriaPrincipal]) {
+            if (varietal) {
+                // Subtítulo de Varietal (Ej: Chardonnay)
+                const varTitle = document.createElement('h4');
+                varTitle.className = 'vino-varietal-subcategoria';
+                varTitle.textContent = varietal;
+                categoriaWrapper.appendChild(varTitle);
+            }
 
-        // Generar ID del contenedor basado en la subcategoría
-        const containerId = `vinos-${subcategoria.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`;
-        const container = document.getElementById(containerId);
-
-        console.log('🔍 Buscando contenedor:', {
-            subcategoria: subcategoria,
-            idGenerado: containerId,
-            encontrado: container ? '✅ SÍ' : '❌ NO',
-            cantidadVinos: vinosPorCategoria[subcategoria].length
-        });
-
-        if (!container) {
-            console.warn('⚠️ No se encontró contenedor para:', subcategoria, '(ID esperado:', containerId + ')');
-            continue;
+            // Contenedor para los vinos de este varietal/subcategoría
+            const itemsContainer = document.createElement('div');
+            itemsContainer.className = 'vino-items-list';
+            
+            const fragment = document.createDocumentFragment();
+            agrupado[categoriaPrincipal][varietal].forEach(vino => {
+                fragment.appendChild(createVinoItem(vino));
+            });
+            itemsContainer.appendChild(fragment);
+            
+            categoriaWrapper.appendChild(itemsContainer);
         }
-
-        container.innerHTML = '';
-
-        // Renderizar vinos
-        vinosPorCategoria[subcategoria].forEach(vino => {
-            const vinoElement = createVinoItem(vino);
-            container.appendChild(vinoElement);
-        });
-
-        console.log(`✅ Renderizados ${vinosPorCategoria[subcategoria].length} vinos en ${containerId}`);
+        
+        mainContainer.appendChild(categoriaWrapper);
     }
+    
+    console.log('✅ Renderizado completo de la Carta de Vinos');
 }
 
 // ============================================
 // CREACIÓN DE ELEMENTOS
 // ============================================
 
+/**
+ * Crea el elemento HTML para un item de menú estándar (Entrées, Plats, Desserts).
+ * Optimizado para concisión.
+ */
 function createMenuItem(item) {
+    const { id, nombreEs, nombreEn, descripcionEs, descripcionEn, precio } = item;
+    
     const div = document.createElement('div');
     div.className = 'menu-item';
-    div.setAttribute('data-id', item.id);
+    div.setAttribute('data-id', id);
 
-    // Nombre en español
-    if (item.nombreEs) {
-        const nombreEs = document.createElement('div');
-        nombreEs.className = 'item-name-es';
-        nombreEs.textContent = item.nombreEs;
-        div.appendChild(nombreEs);
-    }
+    const nameEsDiv = nombreEs ? `<div class="item-name-es">${nombreEs}</div>` : '';
+    const nameEnDiv = nombreEn ? `<div class="item-name-en">${nombreEn}</div>` : '';
+    const descEsDiv = descripcionEs ? `<div class="item-description-es">${descripcionEs}</div>` : '';
+    const descEnDiv = descripcionEn ? `<div class="item-description-en">${descripcionEn}</div>` : '';
+    const priceDiv = `<div class="item-price">${formatPrice(precio)}</div>`;
 
-    // Nombre en inglés
-    if (item.nombreEn) {
-        const nombreEn = document.createElement('div');
-        nombreEn.className = 'item-name-en';
-        nombreEn.textContent = item.nombreEn;
-        div.appendChild(nombreEn);
-    }
-
-    // Descripción en español
-    if (item.descripcionEs) {
-        const descripcionEs = document.createElement('div');
-        descripcionEs.className = 'item-description-es';
-        descripcionEs.textContent = item.descripcionEs;
-        div.appendChild(descripcionEs);
-    }
-
-    // Descripción en inglés
-    if (item.descripcionEn) {
-        const descripcionEn = document.createElement('div');
-        descripcionEn.className = 'item-description-en';
-        descripcionEn.textContent = item.descripcionEn;
-        div.appendChild(descripcionEn);
-    }
-
-    // Precio
-    const precio = document.createElement('div');
-    precio.className = 'item-price';
-    precio.textContent = formatPrice(item.precio);
-    div.appendChild(precio);
+    // Usar innerHTML para construir el contenido de forma eficiente
+    div.innerHTML = `${nameEsDiv}${nameEnDiv}${descEsDiv}${descEnDiv}${priceDiv}`;
 
     return div;
 }
 
+/**
+ * Crea el elemento HTML para un item de vino.
+ * Se mantienen estilos inline para forzar la visualización (debugging de CSS/datos).
+ */
 function createVinoItem(vino) {
+    const { id, nombreEs, precio } = vino;
+    
     const div = document.createElement('div');
-    div.className = 'vino-item';
-    div.setAttribute('data-id', vino.id);
-
-    const table = document.createElement('div');
-    table.className = 'vino-table';
+    div.className = 'vino-item'; 
+    div.setAttribute('data-id', id);
+    // DEBUG: Forzar display flex y borde para asegurar la visibilidad de la fila
+    div.style.cssText = 'display: flex; justify-content: space-between; margin-bottom: 5px; padding: 5px; border-bottom: 1px dashed #ccc;';
 
     // Nombre del vino
     const nombre = document.createElement('div');
     nombre.className = 'vino-nombre';
-    nombre.textContent = vino.nombreEs;
-    table.appendChild(nombre);
+    // DEBUG: Forzar color y tamaño para visibilidad
+    nombre.style.cssText = 'color: #333; font-weight: bold; font-size: 14px;';
+    
+    // DEBUG CRÍTICO: Log the value before setting the text content
+    if (!nombreEs) {
+        console.warn(`⚠️ Vino ID ${id} tiene nombreEs vacío/nulo.`);
+    }
+    nombre.textContent = nombreEs || '[Nombre Nulo]'; // Fallback visual
+    
+    div.appendChild(nombre);
 
     // Precio del vino
-    const precio = document.createElement('div');
-    precio.className = 'vino-precio';
-    precio.textContent = formatPrice(vino.precio);
-    table.appendChild(precio);
-
-    div.appendChild(table);
+    const precioEl = document.createElement('div');
+    precioEl.className = 'vino-precio';
+    // DEBUG: Forzar color y tamaño para visibilidad
+    precioEl.style.cssText = 'color: #8B0000; font-weight: bold; font-size: 14px;';
+    
+    // DEBUG CRÍTICO: Log the value before setting the text content
+    if (!precio) {
+         console.warn(`⚠️ Vino ID ${id} tiene precio vacío/nulo.`);
+    }
+    precioEl.textContent = formatPrice(precio);
+    
+    div.appendChild(precioEl);
+    
     return div;
 }
 
@@ -474,7 +517,10 @@ function createVinoItem(vino) {
 
 function formatPrice(price) {
     if (!price) return '';
-    return `$${price.toLocaleString('es-AR')}`;
+    // Asegurarse de que el precio es un número antes de formatear
+    const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+    if (isNaN(numericPrice)) return '';
+    return `$${numericPrice.toLocaleString('es-AR')}`;
 }
 
 function updateLastUpdate() {
@@ -512,6 +558,7 @@ function showError(message) {
     const content = document.getElementById('menuContent');
     if (!content) return;
 
+    // Utilizamos un fragmento para el modal/mensaje de error, no alert()
     content.innerHTML = `
         <div style="text-align: center; padding: 60px 20px;">
             <h3 style="color: #B22222; margin-bottom: 15px;">Error</h3>
@@ -685,9 +732,12 @@ function setupLazyLoading() {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.classList.remove('lazy');
-                    observer.unobserve(img);
+                    // Solo si la imagen realmente tiene el atributo data-src
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        observer.unobserve(img);
+                    }
                 }
             });
         });
@@ -711,8 +761,8 @@ function measurePerformance() {
                 const domReadyTime = perfData.domContentLoadedEventEnd - perfData.navigationStart;
 
                 console.log(`📊 Rendimiento:`);
-                console.log(`   - Tiempo de carga total: ${pageLoadTime}ms`);
-                console.log(`   - DOM listo en: ${domReadyTime}ms`);
+                console.log(`   - Tiempo de carga total: ${pageLoadTime}ms`);
+                console.log(`   - DOM listo en: ${domReadyTime}ms`);
             }, 0);
         });
     }
@@ -750,8 +800,8 @@ window.chezManu = {
     clearCache,
     menuData: () => menuData,
     performance: () => window.performance?.timing,
-    version: '2.0.0-optimized'
+    version: '2.1.3-data-diagnosis' // Versión actualizada
 };
 
-console.log('🍽️ Chez Manu Menu App v2.0.0 - Optimizado');
+console.log('🍽️ Chez Manu Menu App v2.1.3 - Diagnóstico de Datos de Vinos');
 console.log('Funciones disponibles:', Object.keys(window.chezManu));

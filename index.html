@@ -1,159 +1,108 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chez Manu - Restaurant</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chez Manu - Restaurant</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="chezmanulogo.jpg">
-    <link rel="apple-touch-icon" href="chezmanulogo.jpg">
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="chezmanulogo.jpg">
+    <link rel="apple-touch-icon" href="chezmanulogo.jpg">
 
-    <!-- Meta tags para SEO y redes sociales -->
-    <meta name="description" content="Menú digital de Chez Manu Restaurant - Ushuaia, Tierra del Fuego">
-    <meta property="og:title" content="Chez Manu - Restaurant">
-    <meta property="og:description" content="Menú digital - Restaurante en Ushuaia, Tierra del Fuego">
-    <meta property="og:image" content="chezmanulogo.jpg">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Chez Manu - Restaurant">
-    <meta name="twitter:description" content="Menú digital - Restaurante en Ushuaia, Tierra del Fuego">
-    <meta name="twitter:image" content="chezmanulogo.jpg">
+    <!-- Meta tags para SEO y redes sociales -->
+    <meta name="description" content="Menú digital de Chez Manu Restaurant - Ushuaia, Tierra del Fuego">
+    <meta property="og:title" content="Chez Manu - Restaurant">
+    <meta property="og:description" content="Menú digital - Restaurante en Ushuaia, Tierra del Fuego">
+    <meta property="og:image" content="chezmanulogo.jpg">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Chez Manu - Restaurant">
+    <meta name="twitter:description" content="Menú digital - Restaurante en Ushuaia, Tierra del Fuego">
+    <meta name="twitter:image" content="chezmanulogo.jpg">
 
-    <!-- Preload crítico para mejorar rendimiento -->
-    <link rel="preload" href="styles.css" as="style">
-    <link rel="preload" href="app.js" as="script">
-    <link rel="preload" href="chezmanulogo.jpg" as="image">
+    <!-- Preload crítico para mejorar rendimiento -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    <link rel="preload" href="chezmanulogo.jpg" as="image">
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Header con Logo -->
-        <header class="header">
-            <div class="logo-container">
-                <img src="chezmanulogo.jpg" alt="Chez Manu Restaurant" class="logo-image">
-            </div>
-        </header>
+    <div class="container">
+        <!-- Header con Logo -->
+        <header class="header">
+            <div class="logo-container">
+                <img src="chezmanulogo.jpg" alt="Chez Manu Restaurant" class="logo-image">
+            </div>
+        </header>
 
-        <!-- Navegación de Categorías -->
-        <nav class="menu-nav">
-            <button class="nav-btn active" data-category="entrees">Nos Entrées</button>
-            <button class="nav-btn" data-category="plats">Nos Assiettes Principales</button>
-            <button class="nav-btn" data-category="desserts">Nos desserts</button>
-            <button class="nav-btn" data-category="vinos">Carta de Vinos</button>
-        </nav>
+        <!-- Navegación de Categorías -->
+        <nav class="menu-nav">
+            <button class="nav-btn active" data-category="entrees">Nos Entrées</button>
+            <button class="nav-btn" data-category="plats">Nos Assiettes Principales</button>
+            <button class="nav-btn" data-category="desserts">Nos desserts</button>
+            <button class="nav-btn" data-category="vinos">Carta de Vinos</button>
+        </nav>
 
-        <!-- Loader -->
-        <div class="loader" id="loader">
-            <div class="spinner"></div>
-            <p>Cargando menú...</p>
-        </div>
+        <!-- Loader -->
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p>Cargando menú...</p>
+        </div>
 
-        <!-- Contenedor del Menú -->
-        <main class="menu-content" id="menuContent">
-            <!-- Entrées -->
-            <section class="menu-section" id="entrees-section">
-                <h2 class="section-title">Nos Entrées</h2>
-                <div class="menu-items" id="entrees-items"></div>
-            </section>
+        <!-- Contenedor del Menú -->
+        <main class="menu-content" id="menuContent">
+            <!-- Entrées -->
+            <section class="menu-section" id="entrees-section">
+                <h2 class="section-title">Nos Entrées</h2>
+                <div class="menu-items" id="entrees-items"></div>
+            </section>
 
-            <!-- Plats Principaux -->
-            <section class="menu-section" id="plats-section" style="display: none;">
-                <h2 class="section-title">Nos Assiettes Principales</h2>
+            <!-- Plats Principaux -->
+            <section class="menu-section" id="plats-section" style="display: none;">
+                <h2 class="section-title">Nos Assiettes Principales</h2>
 
-                <!-- Subsección La Mer -->
-                <div class="subsection">
-                    <h3 class="subsection-title">La Mer</h3>
-                    <div class="menu-items" id="plats-mer-items"></div>
-                </div>
+                <!-- Subsección La Mer -->
+                <div class="subsection">
+                    <h3 class="subsection-title">La Mer</h3>
+                    <div class="menu-items" id="plats-mer-items"></div>
+                </div>
 
-                <!-- Subsección La Terre -->
-                <div class="subsection">
-                    <h3 class="subsection-title">La Terre</h3>
-                    <div class="menu-items" id="plats-terre-items"></div>
-                </div>
-            </section>
+                <!-- Subsección La Terre -->
+                <div class="subsection">
+                    <h3 class="subsection-title">La Terre</h3>
+                    <div class="menu-items" id="plats-terre-items"></div>
+                </div>
+            </section>
 
-            <!-- Desserts -->
-            <section class="menu-section" id="desserts-section" style="display: none;">
-                <h2 class="section-title">Nos desserts</h2>
-                <div class="menu-items" id="desserts-items"></div>
-            </section>
+            <!-- Desserts -->
+            <section class="menu-section" id="desserts-section" style="display: none;">
+                <h2 class="section-title">Nos desserts</h2>
+                <div class="menu-items" id="desserts-items"></div>
+            </section>
 
-            <!-- Vinos -->
-            <section class="menu-section" id="vinos-section" style="display: none;">
-                <h2 class="section-title">Carta de Vinos</h2>
+            <!-- Vinos (Estructura Corregida para inyección dinámica) -->
+            <section class="menu-section" id="vinos-section" style="display: none;">
+                <h2 class="section-title">Carta de Vinos</h2>
+                
+                <!-- ESTE ES EL CONTENEDOR REQUERIDO POR app.js -->
+                <div class="menu-items" id="vinos-items"></div>
+                
+            </section>
+        </main>
 
-                <!-- BLANCOS ARGENTINOS -->
-                <div class="vinos-categoria">
-                    <h3 class="vinos-categoria-title">BLANCOS ARGENTINOS</h3>
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Última actualización: <span id="lastUpdate">--</span></p>
+        </footer>
+    </div>
 
-                    <h4 class="vinos-varietal-title">Chardonnay</h4>
-                    <div class="vinos-list" id="vinos-blancos-argentinos-chardonnay"></div>
+    <!-- Configuración de API -->
+    <script>
+        // URL de Google Apps Script
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzG1X85a1kRca0dJyETkHqWyc5jmHzOBUF8UPl5wYXubWVq1-XNyixjHgl6xedBYu4Y/exec';
+    </script>
 
-                    <h4 class="vinos-varietal-title">Sauvignon Blanc</h4>
-                    <div class="vinos-list" id="vinos-blancos-argentinos-sauvignon-blanc"></div>
-
-                    <h4 class="vinos-varietal-title">Torrontés</h4>
-                    <div class="vinos-list" id="vinos-blancos-argentinos-torronts"></div>
-
-                    <h4 class="vinos-varietal-title">Gewürztraminer</h4>
-                    <div class="vinos-list" id="vinos-blancos-argentinos-gewrztraminer"></div>
-                </div>
-
-                <!-- ESPUMANTE ARGENTINO -->
-                <div class="vinos-categoria">
-                    <h3 class="vinos-categoria-title">ESPUMANTE ARGENTINO</h3>
-                    <div class="vinos-list" id="vinos-espumante-argentino"></div>
-                </div>
-
-                <!-- CHAMPAGNE -->
-                <div class="vinos-categoria">
-                    <h3 class="vinos-categoria-title">CHAMPAGNE</h3>
-                    <div class="vinos-list" id="vinos-champagne"></div>
-                </div>
-
-                <!-- TINTOS ARGENTINOS -->
-                <div class="vinos-categoria">
-                    <h3 class="vinos-categoria-title">TINTOS ARGENTINOS</h3>
-
-                    <h4 class="vinos-varietal-title">Malbec</h4>
-                    <div class="vinos-list" id="vinos-tintos-argentinos-malbec"></div>
-
-                    <h4 class="vinos-varietal-title">Pinot Noir</h4>
-                    <div class="vinos-list" id="vinos-tintos-argentinos-pinot-noir"></div>
-
-                    <h4 class="vinos-varietal-title">Cabernet Sauvignon</h4>
-                    <div class="vinos-list" id="vinos-tintos-argentinos-cabernet-sauvignon"></div>
-
-                    <h4 class="vinos-varietal-title">Syrah</h4>
-                    <div class="vinos-list" id="vinos-tintos-argentinos-syrah"></div>
-
-                    <h4 class="vinos-varietal-title">Merlot</h4>
-                    <div class="vinos-list" id="vinos-tintos-argentinos-merlot"></div>
-
-                    <h4 class="vinos-varietal-title">Petit Verdot</h4>
-                    <div class="vinos-list" id="vinos-tintos-argentinos-petit-verdot"></div>
-
-                    <h4 class="vinos-varietal-title">Blends</h4>
-                    <div class="vinos-list" id="vinos-tintos-argentinos-blends"></div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>Última actualización: <span id="lastUpdate">--</span></p>
-        </footer>
-    </div>
-
-    <!-- Configuración de API -->
-    <script>
-        // URL de Google Apps Script
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxwybk8BN7ZztC8OrO8R-4Z9a8AZ1hq3vUmOlADIzpQMqqmRVrww8moCHzKDbnTR46_/exec';
-    </script>
-
-    <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
