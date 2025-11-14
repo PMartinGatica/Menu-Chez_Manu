@@ -41,6 +41,7 @@
             <button class="nav-btn active" data-category="entrees">Nos Entrées</button>
             <button class="nav-btn" data-category="plats">Nos Assiettes Principales</button>
             <button class="nav-btn" data-category="desserts">Nos desserts</button>
+            <button class="nav-btn" data-category="vinos">Carta de Vinos</button>
         </nav>
 
         <!-- Loader -->
@@ -79,6 +80,66 @@
                 <h2 class="section-title">Nos desserts</h2>
                 <div class="menu-items" id="desserts-items"></div>
             </section>
+
+            <!-- Vinos -->
+            <section class="menu-section" id="vinos-section" style="display: none;">
+                <h2 class="section-title">Carta de Vinos</h2>
+
+                <!-- BLANCOS ARGENTINOS -->
+                <div class="vinos-categoria">
+                    <h3 class="vinos-categoria-title">BLANCOS ARGENTINOS</h3>
+
+                    <h4 class="vinos-varietal-title">Chardonnay</h4>
+                    <div class="vinos-list" id="vinos-blancos-argentinos-chardonnay"></div>
+
+                    <h4 class="vinos-varietal-title">Sauvignon Blanc</h4>
+                    <div class="vinos-list" id="vinos-blancos-argentinos-sauvignon-blanc"></div>
+
+                    <h4 class="vinos-varietal-title">Torrontés</h4>
+                    <div class="vinos-list" id="vinos-blancos-argentinos-torronts"></div>
+
+                    <h4 class="vinos-varietal-title">Gewürztraminer</h4>
+                    <div class="vinos-list" id="vinos-blancos-argentinos-gewrztraminer"></div>
+                </div>
+
+                <!-- ESPUMANTE ARGENTINO -->
+                <div class="vinos-categoria">
+                    <h3 class="vinos-categoria-title">ESPUMANTE ARGENTINO</h3>
+                    <div class="vinos-list" id="vinos-espumante-argentino"></div>
+                </div>
+
+                <!-- CHAMPAGNE -->
+                <div class="vinos-categoria">
+                    <h3 class="vinos-categoria-title">CHAMPAGNE</h3>
+                    <div class="vinos-list" id="vinos-champagne"></div>
+                </div>
+
+                <!-- TINTOS ARGENTINOS -->
+                <div class="vinos-categoria">
+                    <h3 class="vinos-categoria-title">TINTOS ARGENTINOS</h3>
+
+                    <h4 class="vinos-varietal-title">Malbec</h4>
+                    <div class="vinos-list" id="vinos-tintos-argentinos-malbec"></div>
+
+                    <h4 class="vinos-varietal-title">Pinot Noir</h4>
+                    <div class="vinos-list" id="vinos-tintos-argentinos-pinot-noir"></div>
+
+                    <h4 class="vinos-varietal-title">Cabernet Sauvignon</h4>
+                    <div class="vinos-list" id="vinos-tintos-argentinos-cabernet-sauvignon"></div>
+
+                    <h4 class="vinos-varietal-title">Syrah</h4>
+                    <div class="vinos-list" id="vinos-tintos-argentinos-syrah"></div>
+
+                    <h4 class="vinos-varietal-title">Merlot</h4>
+                    <div class="vinos-list" id="vinos-tintos-argentinos-merlot"></div>
+
+                    <h4 class="vinos-varietal-title">Petit Verdot</h4>
+                    <div class="vinos-list" id="vinos-tintos-argentinos-petit-verdot"></div>
+
+                    <h4 class="vinos-varietal-title">Blends</h4>
+                    <div class="vinos-list" id="vinos-tintos-argentinos-blends"></div>
+                </div>
+            </section>
         </main>
 
         <!-- Footer -->
@@ -90,7 +151,7 @@
     <!-- Configuración de API -->
     <script>
         // URL de Google Apps Script
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxZcIwVwn59YjtB1SWHxgt5fwrBnb4CIDlEPL9SJMeJGAu3i1JLD39SRCx9UEOSm7X8/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxwybk8BN7ZztC8OrO8R-4Z9a8AZ1hq3vUmOlADIzpQMqqmRVrww8moCHzKDbnTR46_/exec';
     </script>
 
     <script src="app.js"></script>

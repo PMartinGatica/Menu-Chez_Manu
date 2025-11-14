@@ -1,2 +1,2 @@
 # Proxy para Google Apps Script (evita CORS)
-/api/*  https://script.google.com/macros/s/AKfycbxZcIwVwn59YjtB1SWHxgt5fwrBnb4CIDlEPL9SJMeJGAu3i1JLD39SRCx9UEOSm7X8/exec:splat  200
+/api/*  https://script.google.com/macros/s/AKfycbxwybk8BN7ZztC8OrO8R-4Z9a8AZ1hq3vUmOlADIzpQMqqmRVrww8moCHzKDbnTR46_/exec:splat  200

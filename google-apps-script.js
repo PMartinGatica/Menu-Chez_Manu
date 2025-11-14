@@ -16,7 +16,8 @@
 const SHEET_NAMES = {
   ENTREES: 'Entrées',
   PLATS: 'Plats Principaux',
-  DESSERTS: 'Desserts'
+  DESSERTS: 'Desserts',
+  VINOS: 'Vinos'
 };
 
 const COLUMNS = {
@@ -123,7 +124,73 @@ function poblarDatosIniciales() {
   ];
   dessertsSheet.getRange(2, 1, dessertsData.length, dessertsData[0].length).setValues(dessertsData);
 
-  return 'Datos iniciales cargados correctamente';
+  // VINOS
+  const vinosSheet = ss.getSheetByName(SHEET_NAMES.VINOS);
+  const vinosData = [
+    // BLANCOS ARGENTINOS - Chardonnay
+    [1, 'Luca', '', '', '', 48000, 'Vinos', 'Blancos Argentinos - Chardonnay', true, new Date()],
+    [2, 'Lagarde', '', '', '', 26000, 'Vinos', 'Blancos Argentinos - Chardonnay', true, new Date()],
+    [3, 'Angelica Zapata', '', '', '', 56000, 'Vinos', 'Blancos Argentinos - Chardonnay', true, new Date()],
+    [4, 'Escorihuela Gascón Gran Reserva', '', '', '', 44000, 'Vinos', 'Blancos Argentinos - Chardonnay', true, new Date()],
+
+    // BLANCOS ARGENTINOS - Sauvignon Blanc
+    [5, 'Luigi Bosca', '', '', '', 45000, 'Vinos', 'Blancos Argentinos - Sauvignon Blanc', true, new Date()],
+    [6, 'Rutini', '', '', '', 35000, 'Vinos', 'Blancos Argentinos - Sauvignon Blanc', true, new Date()],
+    [7, 'Pequeñas Producciones', '', '', '', 50000, 'Vinos', 'Blancos Argentinos - Sauvignon Blanc', true, new Date()],
+    [8, 'Trumpeter', '', '', '', 18000, 'Vinos', 'Blancos Argentinos - Sauvignon Blanc', true, new Date()],
+
+    // BLANCOS ARGENTINOS - Torrontés
+    [9, 'Altaland', '', '', '', 23000, 'Vinos', 'Blancos Argentinos - Torrontés', true, new Date()],
+    [10, 'Alta vista Olympe', '', '', '', 55000, 'Vinos', 'Blancos Argentinos - Torrontés', true, new Date()],
+
+    // BLANCOS ARGENTINOS - Gewürztraminer
+    [11, 'Rutini', '', '', '', 52000, 'Vinos', 'Blancos Argentinos - Gewürztraminer', true, new Date()],
+
+    // ESPUMANTE ARGENTINO
+    [12, 'La Posta Nature', '', '', '', 40000, 'Vinos', 'Espumante Argentino', true, new Date()],
+    [13, 'Baron B Extra Brut', '', '', '', 55000, 'Vinos', 'Espumante Argentino', true, new Date()],
+
+    // CHAMPAGNE
+    [14, 'Veuve Clicquot Brut Yellow Label', '', '', '', 350000, 'Vinos', 'Champagne', true, new Date()],
+    [15, 'Moet & Chandon Impérial Brut', '', '', '', 330000, 'Vinos', 'Champagne', true, new Date()],
+
+    // TINTOS ARGENTINOS - Malbec
+    [16, 'Rutini', '', '', '', 50000, 'Vinos', 'Tintos Argentinos - Malbec', true, new Date()],
+    [17, 'Luca', '', '', '', 59000, 'Vinos', 'Tintos Argentinos - Malbec', true, new Date()],
+    [18, 'Angelica Zapata Alta', '', '', '', 70000, 'Vinos', 'Tintos Argentinos - Malbec', true, new Date()],
+    [19, 'Aruma', '', '', '', 60000, 'Vinos', 'Tintos Argentinos - Malbec', true, new Date()],
+
+    // TINTOS ARGENTINOS - Pinot Noir
+    [20, 'Rutini', '', '', '', 56000, 'Vinos', 'Tintos Argentinos - Pinot Noir', true, new Date()],
+    [21, 'La Posta Glorieta', '', '', '', 27000, 'Vinos', 'Tintos Argentinos - Pinot Noir', true, new Date()],
+    [22, 'Humberto Canale Old Vineyard', '', '', '', 58000, 'Vinos', 'Tintos Argentinos - Pinot Noir', true, new Date()],
+    [23, 'Araucana Río de los Ciervos', '', '', '', 60000, 'Vinos', 'Tintos Argentinos - Pinot Noir', true, new Date()],
+
+    // TINTOS ARGENTINOS - Cabernet Sauvignon
+    [24, 'Trumpeter', '', '', '', 18000, 'Vinos', 'Tintos Argentinos - Cabernet Sauvignon', true, new Date()],
+    [25, 'Piattelli Reserve', '', '', '', 34000, 'Vinos', 'Tintos Argentinos - Cabernet Sauvignon', true, new Date()],
+    [26, 'Passion de los Andes - Collection -', '', '', '', 38000, 'Vinos', 'Tintos Argentinos - Cabernet Sauvignon', true, new Date()],
+
+    // TINTOS ARGENTINOS - Syrah
+    [27, 'Escorihuela Gascon', '', '', '', 33000, 'Vinos', 'Tintos Argentinos - Syrah', true, new Date()],
+    [28, 'Altaland', '', '', '', 25000, 'Vinos', 'Tintos Argentinos - Syrah', true, new Date()],
+    [29, 'Pequeñas Producciones', '', '', '', 54000, 'Vinos', 'Tintos Argentinos - Syrah', true, new Date()],
+
+    // TINTOS ARGENTINOS - Merlot
+    [30, 'Rutini', '', '', '', 32000, 'Vinos', 'Tintos Argentinos - Merlot', true, new Date()],
+    [31, 'Humberto Canale Estate', '', '', '', 30000, 'Vinos', 'Tintos Argentinos - Merlot', true, new Date()],
+
+    // TINTOS ARGENTINOS - Petit Verdot
+    [32, 'Passion de los Andes', '', '', '', 32000, 'Vinos', 'Tintos Argentinos - Petit Verdot', true, new Date()],
+
+    // TINTOS ARGENTINOS - Blends
+    [33, 'Clos de los 7', '', '', '', 36000, 'Vinos', 'Tintos Argentinos - Blends', true, new Date()],
+    [34, 'Luca Beso de Dante', '', '', '', 95000, 'Vinos', 'Tintos Argentinos - Blends', true, new Date()],
+    [35, 'MEG Escorihuela Gascón', '', '', '', 120000, 'Vinos', 'Tintos Argentinos - Blends', true, new Date()]
+  ];
+  vinosSheet.getRange(2, 1, vinosData.length, vinosData[0].length).setValues(vinosData);
+
+  return 'Datos iniciales cargados correctamente (incluye vinos)';
 }
 
 // ============================================
@@ -203,6 +270,7 @@ function getMenu() {
     entrees: [],
     plats: [],
     desserts: [],
+    vinos: [],
     lastUpdate: new Date().toISOString()
   };
 
@@ -225,6 +293,13 @@ function getMenu() {
   if (dessertsSheet) {
     const dessertsData = dessertsSheet.getDataRange().getValues();
     menu.desserts = parseSheetData(dessertsData);
+  }
+
+  // Leer Vinos
+  const vinosSheet = ss.getSheetByName(SHEET_NAMES.VINOS);
+  if (vinosSheet) {
+    const vinosData = vinosSheet.getDataRange().getValues();
+    menu.vinos = parseSheetData(vinosData);
   }
 
   return menu;
@@ -507,5 +582,839 @@ function onEdit(e) {
   if (range.getRow() > 1) {
     const fechaCol = COLUMNS.FECHA_ACTUALIZACION + 1;
     sheet.getRange(range.getRow(), fechaCol).setValue(new Date());
+  }
+}
+
+// ============================================
+// EXPORTACIÓN A PDF
+// ============================================
+
+/**
+ * Generar PDF de toda la carta (para imprimir)
+ * Esta función se ejecuta manualmente desde el menú personalizado
+ */
+function generarCartaCompletaPDF() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const doc = DocumentApp.create('Carta Chez Manu - ' + new Date().toLocaleDateString());
+  const body = doc.getBody();
+
+  // Configurar el documento
+  body.setMarginTop(50);
+  body.setMarginBottom(50);
+  body.setMarginLeft(70);
+  body.setMarginRight(70);
+
+  // Logo y Header
+  const header = body.appendParagraph('Chez Manu');
+  header.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  header.setFontSize(24);
+  header.setBold(true);
+  header.setFontFamily('Georgia');
+
+  const subtitle = body.appendParagraph('Restaurant\nUshuaia - Tierra del Fuego');
+  subtitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  subtitle.setFontSize(10);
+  subtitle.setFontFamily('Georgia');
+  subtitle.setItalic(true);
+
+  body.appendHorizontalRule();
+  body.appendParagraph(''); // Espacio
+
+  // ENTRÉES
+  agregarSeccionAlPDF(body, 'Nos Entrées', SHEET_NAMES.ENTREES, ss);
+
+  // PLATS PRINCIPAUX
+  agregarSeccionAlPDF(body, 'Nos Assiettes Principales', SHEET_NAMES.PLATS, ss);
+
+  // DESSERTS
+  agregarSeccionAlPDF(body, 'Nos desserts', SHEET_NAMES.DESSERTS, ss);
+
+  // PÁGINA NUEVA PARA VINOS
+  body.appendPageBreak();
+
+  // VINOS
+  agregarSeccionVinosAlPDF(body, ss);
+
+  // Guardar y generar PDF
+  doc.saveAndClose();
+
+  // Obtener el PDF
+  const docFile = DriveApp.getFileById(doc.getId());
+  const pdfBlob = docFile.getAs('application/pdf');
+  const pdfFile = DriveApp.createFile(pdfBlob);
+  pdfFile.setName('Carta_Chez_Manu_' + new Date().toISOString().split('T')[0] + '.pdf');
+
+  // Eliminar el documento temporal
+  DriveApp.getFileById(doc.getId()).setTrashed(true);
+
+  // Devolver el enlace del PDF
+  return {
+    success: true,
+    message: 'PDF generado correctamente',
+    pdfUrl: pdfFile.getUrl(),
+    pdfId: pdfFile.getId()
+  };
+}
+
+/**
+ * Agregar una sección (Entrées, Plats, Desserts) al PDF
+ */
+function agregarSeccionAlPDF(body, titulo, sheetName, ss) {
+  const sheet = ss.getSheetByName(sheetName);
+  if (!sheet) return;
+
+  const data = sheet.getDataRange().getValues();
+
+  // Título de sección
+  body.appendParagraph(''); // Espacio
+  const sectionTitle = body.appendParagraph(titulo);
+  sectionTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  sectionTitle.setFontSize(18);
+  sectionTitle.setForegroundColor('#8B0000');
+  sectionTitle.setBold(true);
+  sectionTitle.setItalic(true);
+  body.appendParagraph(''); // Espacio
+
+  // Agrupar por subcategoría
+  const itemsPorSubcategoria = {};
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const activo = row[COLUMNS.ACTIVO];
+
+    if (activo) {
+      const subcategoria = row[COLUMNS.SUBCATEGORIA] || 'General';
+      if (!itemsPorSubcategoria[subcategoria]) {
+        itemsPorSubcategoria[subcategoria] = [];
+      }
+      itemsPorSubcategoria[subcategoria].push(row);
+    }
+  }
+
+  // Renderizar items por subcategoría
+  for (const subcategoria in itemsPorSubcategoria) {
+    if (subcategoria !== 'General' && subcategoria !== '') {
+      const subTitle = body.appendParagraph(subcategoria);
+      subTitle.setFontSize(14);
+      subTitle.setForegroundColor('#4169E1');
+      subTitle.setItalic(true);
+      subTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      body.appendParagraph(''); // Espacio
+    }
+
+    itemsPorSubcategoria[subcategoria].forEach(row => {
+      const nombreEs = row[COLUMNS.NOMBRE_ES];
+      const nombreEn = row[COLUMNS.NOMBRE_EN];
+      const descripcionEs = row[COLUMNS.DESCRIPCION_ES];
+      const descripcionEn = row[COLUMNS.DESCRIPCION_EN];
+      const precio = row[COLUMNS.PRECIO];
+
+      // Nombre en español
+      const itemName = body.appendParagraph(nombreEs);
+      itemName.setFontSize(11);
+      itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+      // Nombre en inglés
+      if (nombreEn) {
+        const itemNameEn = body.appendParagraph(nombreEn);
+        itemNameEn.setFontSize(10);
+        itemNameEn.setItalic(true);
+        itemNameEn.setForegroundColor('#666666');
+        itemNameEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      }
+
+      // Descripciones
+      if (descripcionEs) {
+        const desc = body.appendParagraph(descripcionEs);
+        desc.setFontSize(9);
+        desc.setForegroundColor('#777777');
+        desc.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      }
+
+      if (descripcionEn) {
+        const descEn = body.appendParagraph(descripcionEn);
+        descEn.setFontSize(9);
+        descEn.setItalic(true);
+        descEn.setForegroundColor('#777777');
+        descEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      }
+
+      // Precio
+      const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
+      itemPrice.setFontSize(11);
+      itemPrice.setItalic(true);
+      itemPrice.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+      body.appendParagraph(''); // Espacio entre items
+    });
+  }
+}
+
+/**
+ * Agregar sección de vinos al PDF (organizada especialmente)
+ */
+function agregarSeccionVinosAlPDF(body, ss) {
+  const sheet = ss.getSheetByName(SHEET_NAMES.VINOS);
+  if (!sheet) return;
+
+  const data = sheet.getDataRange().getValues();
+
+  // Título principal
+  const mainTitle = body.appendParagraph('Carta de Vinos');
+  mainTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  mainTitle.setFontSize(20);
+  mainTitle.setForegroundColor('#8B0000');
+  mainTitle.setBold(true);
+  body.appendParagraph(''); // Espacio
+
+  // Agrupar vinos por categoría principal y subcategoría
+  const vinosPorCategoria = {};
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const activo = row[COLUMNS.ACTIVO];
+
+    if (activo) {
+      const subcategoria = row[COLUMNS.SUBCATEGORIA];
+      if (!vinosPorCategoria[subcategoria]) {
+        vinosPorCategoria[subcategoria] = [];
+      }
+      vinosPorCategoria[subcategoria].push(row);
+    }
+  }
+
+  // Renderizar vinos por categoría
+  let categoriaActual = '';
+
+  for (const subcategoria in vinosPorCategoria) {
+    // Detectar categoría principal (antes del guión)
+    const partes = subcategoria.split(' - ');
+    const categoriaPrincipal = partes[0];
+    const varietal = partes[1] || '';
+
+    // Si cambió la categoría principal, mostrar título
+    if (categoriaPrincipal !== categoriaActual) {
+      categoriaActual = categoriaPrincipal;
+      body.appendParagraph(''); // Espacio
+      const catTitle = body.appendParagraph(categoriaPrincipal.toUpperCase());
+      catTitle.setFontSize(14);
+      catTitle.setForegroundColor('#8B0000');
+      catTitle.setBold(true);
+      catTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      body.appendParagraph(''); // Espacio
+    }
+
+    // Mostrar varietal/tipo si existe
+    if (varietal) {
+      const varTitle = body.appendParagraph(varietal);
+      varTitle.setFontSize(12);
+      varTitle.setForegroundColor('#8B0000');
+      varTitle.setAlignment(DocumentApp.HorizontalAlignment.LEFT);
+      body.appendParagraph(''); // Espacio pequeño
+    }
+
+    // Listar vinos de esta categoría
+    vinosPorCategoria[subcategoria].forEach(row => {
+      const nombre = row[COLUMNS.NOMBRE_ES];
+      const precio = row[COLUMNS.PRECIO];
+
+      // Crear tabla de 2 columnas (nombre - precio)
+      const table = body.appendTable();
+      const tableRow = table.appendTableRow();
+
+      const cellNombre = tableRow.appendTableCell(nombre);
+      cellNombre.setPaddingLeft(0);
+      cellNombre.setPaddingRight(10);
+      cellNombre.getChild(0).asParagraph().setFontSize(10);
+
+      const cellPrecio = tableRow.appendTableCell('$' + precio.toLocaleString('es-AR'));
+      cellPrecio.setPaddingLeft(10);
+      cellPrecio.getChild(0).asParagraph().setFontSize(10);
+      cellPrecio.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
+
+      table.setBorderWidth(0);
+    });
+
+    body.appendParagraph(''); // Espacio
+  }
+}
+
+// ============================================
+// GENERAR PDFs INDIVIDUALES POR SECCIÓN
+// ============================================
+
+/**
+ * Crear header con logo para PDFs individuales
+ */
+function crearHeaderPDF(body) {
+  // Logo y Header
+  const header = body.appendParagraph('Chez Manu');
+  header.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  header.setFontSize(24);
+  header.setBold(true);
+  header.setFontFamily('Georgia');
+
+  const subtitle = body.appendParagraph('RESTAURANT\n\nUshuaia\nTierra del Fuego');
+  subtitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  subtitle.setFontSize(10);
+  subtitle.setFontFamily('Georgia');
+
+  body.appendParagraph(''); // Espacio
+  body.appendParagraph(''); // Espacio
+}
+
+/**
+ * Generar PDF: Nos Entrées
+ */
+function generarPDFEntrees() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAMES.ENTREES);
+  if (!sheet) return { success: false, error: 'Hoja de Entrées no encontrada' };
+
+  const doc = DocumentApp.create('Nos Entrées - ' + new Date().toLocaleDateString());
+  const body = doc.getBody();
+
+  // Configurar márgenes
+  body.setMarginTop(80);
+  body.setMarginBottom(80);
+  body.setMarginLeft(80);
+  body.setMarginRight(80);
+
+  // Header con logo
+  crearHeaderPDF(body);
+
+  // Título de sección en rojo
+  const sectionTitle = body.appendParagraph('Nos Entrées');
+  sectionTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  sectionTitle.setFontSize(18);
+  sectionTitle.setForegroundColor('#8B0000');
+  sectionTitle.setBold(false);
+  sectionTitle.setItalic(true);
+  sectionTitle.setFontFamily('Georgia');
+
+  body.appendParagraph(''); // Espacio
+  body.appendParagraph(''); // Espacio
+
+  // Obtener items activos
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const activo = row[COLUMNS.ACTIVO];
+
+    if (activo) {
+      const nombreEs = row[COLUMNS.NOMBRE_ES];
+      const nombreEn = row[COLUMNS.NOMBRE_EN];
+      const precio = row[COLUMNS.PRECIO];
+
+      // Nombre en español (centrado)
+      const itemName = body.appendParagraph(nombreEs);
+      itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemName.setFontSize(11);
+      itemName.setFontFamily('Georgia');
+
+      // Nombre en inglés (centrado, itálico, gris)
+      if (nombreEn) {
+        const itemNameEn = body.appendParagraph(nombreEn);
+        itemNameEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+        itemNameEn.setFontSize(10);
+        itemNameEn.setItalic(true);
+        itemNameEn.setFontFamily('Georgia');
+      }
+
+      // Precio (centrado, itálico)
+      const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
+      itemPrice.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemPrice.setFontSize(11);
+      itemPrice.setItalic(true);
+      itemPrice.setFontFamily('Georgia');
+
+      body.appendParagraph(''); // Espacio
+      body.appendParagraph(''); // Espacio adicional
+    }
+  }
+
+  // Guardar y generar PDF
+  doc.saveAndClose();
+  const docFile = DriveApp.getFileById(doc.getId());
+  const pdfBlob = docFile.getAs('application/pdf');
+  const pdfFile = DriveApp.createFile(pdfBlob);
+  pdfFile.setName('Nos_Entrees_' + new Date().toISOString().split('T')[0] + '.pdf');
+  DriveApp.getFileById(doc.getId()).setTrashed(true);
+
+  return {
+    success: true,
+    message: 'PDF de Entrées generado correctamente',
+    pdfUrl: pdfFile.getUrl(),
+    pdfId: pdfFile.getId()
+  };
+}
+
+/**
+ * Generar PDF: Nos Assiettes Principales
+ */
+function generarPDFPlats() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAMES.PLATS);
+  if (!sheet) return { success: false, error: 'Hoja de Plats no encontrada' };
+
+  const doc = DocumentApp.create('Nos Assiettes Principales - ' + new Date().toLocaleDateString());
+  const body = doc.getBody();
+
+  // Configurar márgenes
+  body.setMarginTop(80);
+  body.setMarginBottom(80);
+  body.setMarginLeft(80);
+  body.setMarginRight(80);
+
+  // Header con logo
+  crearHeaderPDF(body);
+
+  // Título de sección en rojo
+  const sectionTitle = body.appendParagraph('Nos Assiettes Principales');
+  sectionTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  sectionTitle.setFontSize(18);
+  sectionTitle.setForegroundColor('#8B0000');
+  sectionTitle.setBold(false);
+  sectionTitle.setItalic(true);
+  sectionTitle.setFontFamily('Georgia');
+
+  body.appendParagraph(''); // Espacio
+  body.appendParagraph(''); // Espacio
+
+  // Obtener items y agrupar por subcategoría
+  const data = sheet.getDataRange().getValues();
+  const itemsPorSubcategoria = { 'La Mer': [], 'La Terre': [] };
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const activo = row[COLUMNS.ACTIVO];
+    const subcategoria = row[COLUMNS.SUBCATEGORIA];
+
+    if (activo && itemsPorSubcategoria[subcategoria]) {
+      itemsPorSubcategoria[subcategoria].push(row);
+    }
+  }
+
+  // Renderizar La Mer
+  if (itemsPorSubcategoria['La Mer'].length > 0) {
+    const subTitle = body.appendParagraph('La Mer');
+    subTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    subTitle.setFontSize(14);
+    subTitle.setForegroundColor('#4169E1');
+    subTitle.setItalic(true);
+    subTitle.setFontFamily('Georgia');
+    body.appendParagraph(''); // Espacio
+
+    itemsPorSubcategoria['La Mer'].forEach(row => {
+      const nombreEs = row[COLUMNS.NOMBRE_ES];
+      const nombreEn = row[COLUMNS.NOMBRE_EN];
+      const precio = row[COLUMNS.PRECIO];
+
+      const itemName = body.appendParagraph(nombreEs);
+      itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemName.setFontSize(11);
+      itemName.setFontFamily('Georgia');
+
+      if (nombreEn) {
+        const itemNameEn = body.appendParagraph(nombreEn);
+        itemNameEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+        itemNameEn.setFontSize(10);
+        itemNameEn.setItalic(true);
+        itemNameEn.setFontFamily('Georgia');
+      }
+
+      const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
+      itemPrice.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemPrice.setFontSize(11);
+      itemPrice.setItalic(true);
+      itemPrice.setFontFamily('Georgia');
+
+      body.appendParagraph(''); // Espacio
+      body.appendParagraph(''); // Espacio adicional
+    });
+  }
+
+  // Renderizar La Terre
+  if (itemsPorSubcategoria['La Terre'].length > 0) {
+    const subTitle = body.appendParagraph('La Terre');
+    subTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    subTitle.setFontSize(14);
+    subTitle.setForegroundColor('#8B0000');
+    subTitle.setItalic(true);
+    subTitle.setFontFamily('Georgia');
+    body.appendParagraph(''); // Espacio
+
+    itemsPorSubcategoria['La Terre'].forEach(row => {
+      const nombreEs = row[COLUMNS.NOMBRE_ES];
+      const nombreEn = row[COLUMNS.NOMBRE_EN];
+      const precio = row[COLUMNS.PRECIO];
+
+      const itemName = body.appendParagraph(nombreEs);
+      itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemName.setFontSize(11);
+      itemName.setFontFamily('Georgia');
+
+      if (nombreEn) {
+        const itemNameEn = body.appendParagraph(nombreEn);
+        itemNameEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+        itemNameEn.setFontSize(10);
+        itemNameEn.setItalic(true);
+        itemNameEn.setFontFamily('Georgia');
+      }
+
+      const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
+      itemPrice.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemPrice.setFontSize(11);
+      itemPrice.setItalic(true);
+      itemPrice.setFontFamily('Georgia');
+
+      body.appendParagraph(''); // Espacio
+      body.appendParagraph(''); // Espacio adicional
+    });
+  }
+
+  // Guardar y generar PDF
+  doc.saveAndClose();
+  const docFile = DriveApp.getFileById(doc.getId());
+  const pdfBlob = docFile.getAs('application/pdf');
+  const pdfFile = DriveApp.createFile(pdfBlob);
+  pdfFile.setName('Nos_Assiettes_Principales_' + new Date().toISOString().split('T')[0] + '.pdf');
+  DriveApp.getFileById(doc.getId()).setTrashed(true);
+
+  return {
+    success: true,
+    message: 'PDF de Plats generado correctamente',
+    pdfUrl: pdfFile.getUrl(),
+    pdfId: pdfFile.getId()
+  };
+}
+
+/**
+ * Generar PDF: Nos desserts
+ */
+function generarPDFDesserts() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAMES.DESSERTS);
+  if (!sheet) return { success: false, error: 'Hoja de Desserts no encontrada' };
+
+  const doc = DocumentApp.create('Nos desserts - ' + new Date().toLocaleDateString());
+  const body = doc.getBody();
+
+  // Configurar márgenes
+  body.setMarginTop(80);
+  body.setMarginBottom(80);
+  body.setMarginLeft(80);
+  body.setMarginRight(80);
+
+  // Header con logo
+  crearHeaderPDF(body);
+
+  // Título de sección en rojo
+  const sectionTitle = body.appendParagraph('Nos desserts');
+  sectionTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  sectionTitle.setFontSize(18);
+  sectionTitle.setForegroundColor('#8B0000');
+  sectionTitle.setBold(false);
+  sectionTitle.setItalic(true);
+  sectionTitle.setFontFamily('Georgia');
+
+  body.appendParagraph(''); // Espacio
+  body.appendParagraph(''); // Espacio
+
+  // Obtener items activos
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const activo = row[COLUMNS.ACTIVO];
+
+    if (activo) {
+      const nombreEs = row[COLUMNS.NOMBRE_ES];
+      const descripcionEs = row[COLUMNS.DESCRIPCION_ES];
+      const nombreEn = row[COLUMNS.NOMBRE_EN];
+      const descripcionEn = row[COLUMNS.DESCRIPCION_EN];
+      const precio = row[COLUMNS.PRECIO];
+
+      // Nombre en español (centrado)
+      const itemName = body.appendParagraph(nombreEs);
+      itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemName.setFontSize(11);
+      itemName.setFontFamily('Georgia');
+
+      // Descripción en español (si existe)
+      if (descripcionEs) {
+        const desc = body.appendParagraph(descripcionEs);
+        desc.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+        desc.setFontSize(10);
+        desc.setFontFamily('Georgia');
+      }
+
+      // Nombre en inglés (centrado, itálico, gris)
+      if (nombreEn) {
+        const itemNameEn = body.appendParagraph(nombreEn);
+        itemNameEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+        itemNameEn.setFontSize(10);
+        itemNameEn.setItalic(true);
+        itemNameEn.setFontFamily('Georgia');
+      }
+
+      // Descripción en inglés (si existe)
+      if (descripcionEn) {
+        const descEn = body.appendParagraph(descripcionEn);
+        descEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+        descEn.setFontSize(9);
+        descEn.setItalic(true);
+        descEn.setFontFamily('Georgia');
+      }
+
+      // Precio (centrado, itálico)
+      const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
+      itemPrice.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemPrice.setFontSize(11);
+      itemPrice.setItalic(true);
+      itemPrice.setFontFamily('Georgia');
+
+      body.appendParagraph(''); // Espacio
+      body.appendParagraph(''); // Espacio adicional
+    }
+  }
+
+  // Guardar y generar PDF
+  doc.saveAndClose();
+  const docFile = DriveApp.getFileById(doc.getId());
+  const pdfBlob = docFile.getAs('application/pdf');
+  const pdfFile = DriveApp.createFile(pdfBlob);
+  pdfFile.setName('Nos_desserts_' + new Date().toISOString().split('T')[0] + '.pdf');
+  DriveApp.getFileById(doc.getId()).setTrashed(true);
+
+  return {
+    success: true,
+    message: 'PDF de Desserts generado correctamente',
+    pdfUrl: pdfFile.getUrl(),
+    pdfId: pdfFile.getId()
+  };
+}
+
+/**
+ * Generar PDF: Carta de Vinos
+ */
+function generarPDFVinos() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAMES.VINOS);
+  if (!sheet) return { success: false, error: 'Hoja de Vinos no encontrada' };
+
+  const doc = DocumentApp.create('Carta de Vinos - ' + new Date().toLocaleDateString());
+  const body = doc.getBody();
+
+  // Configurar márgenes
+  body.setMarginTop(60);
+  body.setMarginBottom(60);
+  body.setMarginLeft(70);
+  body.setMarginRight(70);
+
+  // Header con logo
+  crearHeaderPDF(body);
+
+  // Título principal
+  const mainTitle = body.appendParagraph('Carta de Vinos');
+  mainTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  mainTitle.setFontSize(18);
+  mainTitle.setForegroundColor('#8B0000');
+  mainTitle.setBold(false);
+  mainTitle.setItalic(true);
+  mainTitle.setFontFamily('Georgia');
+  body.appendParagraph(''); // Espacio
+
+  // Obtener vinos y agrupar
+  const data = sheet.getDataRange().getValues();
+  const vinosPorCategoria = {};
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const activo = row[COLUMNS.ACTIVO];
+
+    if (activo) {
+      const subcategoria = row[COLUMNS.SUBCATEGORIA];
+      if (!vinosPorCategoria[subcategoria]) {
+        vinosPorCategoria[subcategoria] = [];
+      }
+      vinosPorCategoria[subcategoria].push(row);
+    }
+  }
+
+  // Renderizar por categoría
+  let categoriaActual = '';
+
+  for (const subcategoria in vinosPorCategoria) {
+    const partes = subcategoria.split(' - ');
+    const categoriaPrincipal = partes[0];
+    const varietal = partes[1] || '';
+
+    // Título de categoría principal (BLANCOS ARGENTINOS, etc.)
+    if (categoriaPrincipal !== categoriaActual) {
+      categoriaActual = categoriaPrincipal;
+      body.appendParagraph(''); // Espacio
+      const catTitle = body.appendParagraph(categoriaPrincipal.toUpperCase());
+      catTitle.setFontSize(14);
+      catTitle.setForegroundColor('#8B0000');
+      catTitle.setBold(true);
+      catTitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      catTitle.setFontFamily('Georgia');
+      body.appendParagraph(''); // Espacio
+    }
+
+    // Título de varietal/tipo (Chardonnay, Malbec, etc.)
+    if (varietal) {
+      const varTitle = body.appendParagraph(varietal);
+      varTitle.setFontSize(12);
+      varTitle.setForegroundColor('#8B0000');
+      varTitle.setAlignment(DocumentApp.HorizontalAlignment.LEFT);
+      varTitle.setFontFamily('Georgia');
+    }
+
+    // Listar vinos
+    vinosPorCategoria[subcategoria].forEach(row => {
+      const nombre = row[COLUMNS.NOMBRE_ES];
+      const precio = row[COLUMNS.PRECIO];
+
+      // Usar tabla para alinear nombre y precio
+      const table = body.appendTable();
+      const tableRow = table.appendTableRow();
+
+      const cellNombre = tableRow.appendTableCell(nombre);
+      cellNombre.setPaddingLeft(0);
+      cellNombre.setPaddingRight(20);
+      cellNombre.getChild(0).asParagraph().setFontSize(10);
+      cellNombre.getChild(0).asParagraph().setFontFamily('Georgia');
+
+      const cellPrecio = tableRow.appendTableCell('$ ' + precio.toLocaleString('es-AR'));
+      cellPrecio.setPaddingLeft(20);
+      cellPrecio.getChild(0).asParagraph().setFontSize(10);
+      cellPrecio.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
+      cellPrecio.getChild(0).asParagraph().setFontFamily('Georgia');
+
+      table.setBorderWidth(0);
+    });
+
+    body.appendParagraph(''); // Espacio
+  }
+
+  // Guardar y generar PDF
+  doc.saveAndClose();
+  const docFile = DriveApp.getFileById(doc.getId());
+  const pdfBlob = docFile.getAs('application/pdf');
+  const pdfFile = DriveApp.createFile(pdfBlob);
+  pdfFile.setName('Carta_de_Vinos_' + new Date().toISOString().split('T')[0] + '.pdf');
+  DriveApp.getFileById(doc.getId()).setTrashed(true);
+
+  return {
+    success: true,
+    message: 'PDF de Vinos generado correctamente',
+    pdfUrl: pdfFile.getUrl(),
+    pdfId: pdfFile.getId()
+  };
+}
+
+/**
+ * Crear menú personalizado en Google Sheets
+ */
+function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu('📄 Chez Manu')
+    .addItem('🖨️ PDF: Nos Entrées', 'generarPDFEntreesConMensaje')
+    .addItem('🖨️ PDF: Nos Assiettes Principales', 'generarPDFPlatsConMensaje')
+    .addItem('🖨️ PDF: Nos desserts', 'generarPDFDessertsConMensaje')
+    .addItem('🍷 PDF: Carta de Vinos', 'generarPDFVinosConMensaje')
+    .addSeparator()
+    .addItem('📄 PDF: Carta Completa', 'generarCartaPDFConMensaje')
+    .addSeparator()
+    .addItem('🔄 Inicializar Hojas', 'inicializarHojas')
+    .addItem('📊 Poblar Datos Iniciales', 'poblarDatosIniciales')
+    .addToUi();
+}
+
+/**
+ * Wrappers con mensajes para cada PDF individual
+ */
+function generarPDFEntreesConMensaje() {
+  const ui = SpreadsheetApp.getUi();
+  try {
+    const resultado = generarPDFEntrees();
+    if (resultado.success) {
+      ui.alert('✅ PDF Generado',
+               'PDF "Nos Entrées" generado exitosamente.\\n\\nEnlace: ' + resultado.pdfUrl,
+               ui.ButtonSet.OK);
+    }
+  } catch (error) {
+    ui.alert('❌ Error', 'Error al generar PDF: ' + error.toString(), ui.ButtonSet.OK);
+  }
+}
+
+function generarPDFPlatsConMensaje() {
+  const ui = SpreadsheetApp.getUi();
+  try {
+    const resultado = generarPDFPlats();
+    if (resultado.success) {
+      ui.alert('✅ PDF Generado',
+               'PDF "Nos Assiettes Principales" generado exitosamente.\\n\\nEnlace: ' + resultado.pdfUrl,
+               ui.ButtonSet.OK);
+    }
+  } catch (error) {
+    ui.alert('❌ Error', 'Error al generar PDF: ' + error.toString(), ui.ButtonSet.OK);
+  }
+}
+
+function generarPDFDessertsConMensaje() {
+  const ui = SpreadsheetApp.getUi();
+  try {
+    const resultado = generarPDFDesserts();
+    if (resultado.success) {
+      ui.alert('✅ PDF Generado',
+               'PDF "Nos desserts" generado exitosamente.\\n\\nEnlace: ' + resultado.pdfUrl,
+               ui.ButtonSet.OK);
+    }
+  } catch (error) {
+    ui.alert('❌ Error', 'Error al generar PDF: ' + error.toString(), ui.ButtonSet.OK);
+  }
+}
+
+function generarPDFVinosConMensaje() {
+  const ui = SpreadsheetApp.getUi();
+  try {
+    const resultado = generarPDFVinos();
+    if (resultado.success) {
+      ui.alert('✅ PDF Generado',
+               'PDF "Carta de Vinos" generado exitosamente.\\n\\nEnlace: ' + resultado.pdfUrl,
+               ui.ButtonSet.OK);
+    }
+  } catch (error) {
+    ui.alert('❌ Error', 'Error al generar PDF: ' + error.toString(), ui.ButtonSet.OK);
+  }
+}
+
+/**
+ * Wrapper para generar PDF completo con mensaje al usuario
+ */
+function generarCartaPDFConMensaje() {
+  const ui = SpreadsheetApp.getUi();
+
+  ui.alert('Generando PDF...',
+           'Por favor espera mientras se genera la carta completa en PDF.',
+           ui.ButtonSet.OK);
+
+  try {
+    const resultado = generarCartaCompletaPDF();
+
+    if (resultado.success) {
+      ui.alert('✅ PDF Generado',
+               'La carta ha sido generada exitosamente.\\n\\n' +
+               'Puedes encontrarla en tu Google Drive con el nombre:\\n' +
+               '"Carta_Chez_Manu_[fecha].pdf"\\n\\n' +
+               'Enlace: ' + resultado.pdfUrl,
+               ui.ButtonSet.OK);
+    }
+  } catch (error) {
+    ui.alert('❌ Error',
+             'Ocurrió un error al generar el PDF: ' + error.toString(),
+             ui.ButtonSet.OK);
   }
 }

@@ -12,6 +12,7 @@ let menuData = {
     entrees: [],
     plats: [],
     desserts: [],
+    vinos: [],
     lastUpdate: null
 };
 
@@ -262,6 +263,7 @@ function renderMenu() {
     renderEntrees();
     renderPlats();
     renderDesserts();
+    renderVinos();
 }
 
 function renderEntrees() {
@@ -341,6 +343,47 @@ function renderDesserts() {
     });
 }
 
+function renderVinos() {
+    if (!menuData.vinos || menuData.vinos.length === 0) return;
+
+    // Agrupar vinos por categoría principal y varietal
+    const vinosPorCategoria = {};
+
+    menuData.vinos.forEach(vino => {
+        const subcategoria = vino.subcategoria || 'Otros';
+        if (!vinosPorCategoria[subcategoria]) {
+            vinosPorCategoria[subcategoria] = [];
+        }
+        vinosPorCategoria[subcategoria].push(vino);
+    });
+
+    // Renderizar cada categoría en su contenedor correspondiente
+    for (const subcategoria in vinosPorCategoria) {
+        const partes = subcategoria.split(' - ');
+        const categoriaPrincipal = partes[0];
+        const varietal = partes[1] || '';
+
+        // Generar ID del contenedor basado en la subcategoría
+        const containerId = `vinos-${subcategoria.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`;
+        const container = document.getElementById(containerId);
+
+        console.log('🔍 Buscando contenedor:', containerId, container ? '✅ Encontrado' : '❌ No encontrado');
+
+        if (!container) {
+            console.warn('⚠️ No se encontró contenedor para:', subcategoria, '(ID esperado:', containerId + ')');
+            continue;
+        }
+
+        container.innerHTML = '';
+
+        // Renderizar vinos (sin título de varietal duplicado, ya está en el HTML)
+        vinosPorCategoria[subcategoria].forEach(vino => {
+            const vinoElement = createVinoItem(vino);
+            container.appendChild(vinoElement);
+        });
+    }
+}
+
 // ============================================
 // CREACIÓN DE ELEMENTOS
 // ============================================
@@ -388,6 +431,30 @@ function createMenuItem(item) {
     precio.textContent = formatPrice(item.precio);
     div.appendChild(precio);
 
+    return div;
+}
+
+function createVinoItem(vino) {
+    const div = document.createElement('div');
+    div.className = 'vino-item';
+    div.setAttribute('data-id', vino.id);
+
+    const table = document.createElement('div');
+    table.className = 'vino-table';
+
+    // Nombre del vino
+    const nombre = document.createElement('div');
+    nombre.className = 'vino-nombre';
+    nombre.textContent = vino.nombreEs;
+    table.appendChild(nombre);
+
+    // Precio del vino
+    const precio = document.createElement('div');
+    precio.className = 'vino-precio';
+    precio.textContent = formatPrice(vino.precio);
+    table.appendChild(precio);
+
+    div.appendChild(table);
     return div;
 }
 

@@ -420,3 +420,84 @@ img[loading="lazy"].loaded {
 .menu-section {
     contain: layout style paint;
 }
+
+/* ============================================
+   ESTILOS PARA CARTA DE VINOS
+   ============================================ */
+
+.vinos-categoria {
+    margin-bottom: 40px;
+}
+
+.vinos-categoria-title {
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.vinos-varietal-title {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    margin: 20px 0 15px 20px;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.vinos-list {
+    margin-bottom: 25px;
+    padding: 0 20px;
+}
+
+.vino-item {
+    margin-bottom: 10px;
+}
+
+.vino-table {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--border-color);
+}
+
+.vino-nombre {
+    flex: 1;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.vino-precio {
+    font-size: 1rem;
+    color: var(--text-color);
+    font-style: italic;
+    white-space: nowrap;
+    margin-left: 15px;
+}
+
+/* Responsive para vinos */
+@media (max-width: 768px) {
+    .vinos-categoria-title {
+        font-size: 1.2rem;
+    }
+
+    .vinos-varietal-title {
+        font-size: 1rem;
+        margin-left: 10px;
+    }
+
+    .vinos-list {
+        padding: 0 10px;
+    }
+
+    .vino-nombre {
+        font-size: 0.9rem;
+    }
+
+    .vino-precio {
+        font-size: 0.9rem;
+    }
+}
