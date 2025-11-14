@@ -357,6 +357,9 @@ function renderVinos() {
         vinosPorCategoria[subcategoria].push(vino);
     });
 
+    // Debug: Mostrar todas las subcategorías recibidas
+    console.log('📊 Subcategorías recibidas del servidor:', Object.keys(vinosPorCategoria));
+
     // Renderizar cada categoría en su contenedor correspondiente
     for (const subcategoria in vinosPorCategoria) {
         const partes = subcategoria.split(' - ');
@@ -367,7 +370,12 @@ function renderVinos() {
         const containerId = `vinos-${subcategoria.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`;
         const container = document.getElementById(containerId);
 
-        console.log('🔍 Buscando contenedor:', containerId, container ? '✅ Encontrado' : '❌ No encontrado');
+        console.log('🔍 Buscando contenedor:', {
+            subcategoria: subcategoria,
+            idGenerado: containerId,
+            encontrado: container ? '✅ SÍ' : '❌ NO',
+            cantidadVinos: vinosPorCategoria[subcategoria].length
+        });
 
         if (!container) {
             console.warn('⚠️ No se encontró contenedor para:', subcategoria, '(ID esperado:', containerId + ')');
@@ -376,11 +384,13 @@ function renderVinos() {
 
         container.innerHTML = '';
 
-        // Renderizar vinos (sin título de varietal duplicado, ya está en el HTML)
+        // Renderizar vinos
         vinosPorCategoria[subcategoria].forEach(vino => {
             const vinoElement = createVinoItem(vino);
             container.appendChild(vinoElement);
         });
+
+        console.log(`✅ Renderizados ${vinosPorCategoria[subcategoria].length} vinos en ${containerId}`);
     }
 }
 
