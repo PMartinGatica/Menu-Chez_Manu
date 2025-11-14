@@ -709,25 +709,26 @@ function agregarSeccionAlPDF(body, titulo, sheetName, ss) {
       const descripcionEn = row[COLUMNS.DESCRIPCION_EN];
       const precio = row[COLUMNS.PRECIO];
 
-      // Nombre en español
+      // Nombre en español (NEGRO)
       const itemName = body.appendParagraph(nombreEs);
       itemName.setFontSize(11);
       itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemName.setForegroundColor('#000000');
 
-      // Nombre en inglés
+      // Nombre en inglés (NEGRO)
       if (nombreEn) {
         const itemNameEn = body.appendParagraph(nombreEn);
         itemNameEn.setFontSize(10);
         itemNameEn.setItalic(true);
-        itemNameEn.setForegroundColor('#666666');
+        itemNameEn.setForegroundColor('#000000');
         itemNameEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
       }
 
-      // Descripciones
+      // Descripciones (NEGRO)
       if (descripcionEs) {
         const desc = body.appendParagraph(descripcionEs);
         desc.setFontSize(9);
-        desc.setForegroundColor('#777777');
+        desc.setForegroundColor('#000000');
         desc.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
       }
 
@@ -735,15 +736,16 @@ function agregarSeccionAlPDF(body, titulo, sheetName, ss) {
         const descEn = body.appendParagraph(descripcionEn);
         descEn.setFontSize(9);
         descEn.setItalic(true);
-        descEn.setForegroundColor('#777777');
+        descEn.setForegroundColor('#000000');
         descEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
       }
 
-      // Precio
+      // Precio (NEGRO)
       const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
       itemPrice.setFontSize(11);
       itemPrice.setItalic(true);
       itemPrice.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      itemPrice.setForegroundColor('#000000');
 
       body.appendParagraph(''); // Espacio entre items
     });
@@ -826,11 +828,13 @@ function agregarSeccionVinosAlPDF(body, ss) {
       cellNombre.setPaddingLeft(0);
       cellNombre.setPaddingRight(10);
       cellNombre.getChild(0).asParagraph().setFontSize(10);
+      cellNombre.getChild(0).asParagraph().setForegroundColor('#000000'); // Negro
 
       const cellPrecio = tableRow.appendTableCell('$' + precio.toLocaleString('es-AR'));
       cellPrecio.setPaddingLeft(10);
       cellPrecio.getChild(0).asParagraph().setFontSize(10);
       cellPrecio.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
+      cellPrecio.getChild(0).asParagraph().setForegroundColor('#000000'); // Negro
 
       table.setBorderWidth(0);
     });
@@ -847,17 +851,35 @@ function agregarSeccionVinosAlPDF(body, ss) {
  * Crear header con logo para PDFs individuales
  */
 function crearHeaderPDF(body) {
-  // Logo y Header
-  const header = body.appendParagraph('Chez Manu');
-  header.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  header.setFontSize(24);
-  header.setBold(true);
-  header.setFontFamily('Georgia');
+  try {
+    // Intentar agregar el logo desde Google Drive
+    const logoFileId = '1AO_I55Lhx-Dbmd11Kvn5wcnf6hqEvvpU';
+    const logoFile = DriveApp.getFileById(logoFileId);
+    const logoBlob = logoFile.getBlob();
 
-  const subtitle = body.appendParagraph('RESTAURANT\n\nUshuaia\nTierra del Fuego');
-  subtitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  subtitle.setFontSize(10);
-  subtitle.setFontFamily('Georgia');
+    // Insertar imagen centrada
+    const logoImage = body.appendImage(logoBlob);
+    logoImage.setWidth(150); // Ajustar tamaño
+    logoImage.setHeight(150);
+
+    // Centrar la imagen
+    const logoParagraph = logoImage.getParent().asParagraph();
+    logoParagraph.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+    body.appendParagraph(''); // Espacio después del logo
+  } catch (error) {
+    // Si falla, usar texto como antes
+    const header = body.appendParagraph('Chez Manu');
+    header.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    header.setFontSize(24);
+    header.setBold(true);
+    header.setFontFamily('Georgia');
+
+    const subtitle = body.appendParagraph('RESTAURANT\n\nUshuaia\nTierra del Fuego');
+    subtitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    subtitle.setFontSize(10);
+    subtitle.setFontFamily('Georgia');
+  }
 
   body.appendParagraph(''); // Espacio
   body.appendParagraph(''); // Espacio
@@ -906,27 +928,30 @@ function generarPDFEntrees() {
       const nombreEn = row[COLUMNS.NOMBRE_EN];
       const precio = row[COLUMNS.PRECIO];
 
-      // Nombre en español (centrado)
+      // Nombre en español (centrado, NEGRO)
       const itemName = body.appendParagraph(nombreEs);
       itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
       itemName.setFontSize(11);
       itemName.setFontFamily('Georgia');
+      itemName.setForegroundColor('#000000'); // Negro
 
-      // Nombre en inglés (centrado, itálico, gris)
+      // Nombre en inglés (centrado, itálico, NEGRO)
       if (nombreEn) {
         const itemNameEn = body.appendParagraph(nombreEn);
         itemNameEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
         itemNameEn.setFontSize(10);
         itemNameEn.setItalic(true);
         itemNameEn.setFontFamily('Georgia');
+        itemNameEn.setForegroundColor('#000000'); // Negro
       }
 
-      // Precio (centrado, itálico)
+      // Precio (centrado, itálico, NEGRO)
       const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
       itemPrice.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
       itemPrice.setFontSize(11);
       itemPrice.setItalic(true);
       itemPrice.setFontFamily('Georgia');
+      itemPrice.setForegroundColor('#000000'); // Negro
 
       body.appendParagraph(''); // Espacio
       body.appendParagraph(''); // Espacio adicional
@@ -1014,6 +1039,7 @@ function generarPDFPlats() {
       itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
       itemName.setFontSize(11);
       itemName.setFontFamily('Georgia');
+      itemName.setForegroundColor('#000000'); // Negro
 
       if (nombreEn) {
         const itemNameEn = body.appendParagraph(nombreEn);
@@ -1021,6 +1047,7 @@ function generarPDFPlats() {
         itemNameEn.setFontSize(10);
         itemNameEn.setItalic(true);
         itemNameEn.setFontFamily('Georgia');
+        itemNameEn.setForegroundColor('#000000'); // Negro
       }
 
       const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
@@ -1028,6 +1055,7 @@ function generarPDFPlats() {
       itemPrice.setFontSize(11);
       itemPrice.setItalic(true);
       itemPrice.setFontFamily('Georgia');
+      itemPrice.setForegroundColor('#000000'); // Negro
 
       body.appendParagraph(''); // Espacio
       body.appendParagraph(''); // Espacio adicional
@@ -1053,6 +1081,7 @@ function generarPDFPlats() {
       itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
       itemName.setFontSize(11);
       itemName.setFontFamily('Georgia');
+      itemName.setForegroundColor('#000000'); // Negro
 
       if (nombreEn) {
         const itemNameEn = body.appendParagraph(nombreEn);
@@ -1060,6 +1089,7 @@ function generarPDFPlats() {
         itemNameEn.setFontSize(10);
         itemNameEn.setItalic(true);
         itemNameEn.setFontFamily('Georgia');
+        itemNameEn.setForegroundColor('#000000'); // Negro
       }
 
       const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
@@ -1067,6 +1097,7 @@ function generarPDFPlats() {
       itemPrice.setFontSize(11);
       itemPrice.setItalic(true);
       itemPrice.setFontFamily('Georgia');
+      itemPrice.setForegroundColor('#000000'); // Negro
 
       body.appendParagraph(''); // Espacio
       body.appendParagraph(''); // Espacio adicional
@@ -1134,44 +1165,49 @@ function generarPDFDesserts() {
       const descripcionEn = row[COLUMNS.DESCRIPCION_EN];
       const precio = row[COLUMNS.PRECIO];
 
-      // Nombre en español (centrado)
+      // Nombre en español (centrado, NEGRO)
       const itemName = body.appendParagraph(nombreEs);
       itemName.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
       itemName.setFontSize(11);
       itemName.setFontFamily('Georgia');
+      itemName.setForegroundColor('#000000');
 
-      // Descripción en español (si existe)
+      // Descripción en español (si existe, NEGRO)
       if (descripcionEs) {
         const desc = body.appendParagraph(descripcionEs);
         desc.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
         desc.setFontSize(10);
         desc.setFontFamily('Georgia');
+        desc.setForegroundColor('#000000');
       }
 
-      // Nombre en inglés (centrado, itálico, gris)
+      // Nombre en inglés (centrado, itálico, NEGRO)
       if (nombreEn) {
         const itemNameEn = body.appendParagraph(nombreEn);
         itemNameEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
         itemNameEn.setFontSize(10);
         itemNameEn.setItalic(true);
         itemNameEn.setFontFamily('Georgia');
+        itemNameEn.setForegroundColor('#000000');
       }
 
-      // Descripción en inglés (si existe)
+      // Descripción en inglés (si existe, NEGRO)
       if (descripcionEn) {
         const descEn = body.appendParagraph(descripcionEn);
         descEn.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
         descEn.setFontSize(9);
         descEn.setItalic(true);
         descEn.setFontFamily('Georgia');
+        descEn.setForegroundColor('#000000');
       }
 
-      // Precio (centrado, itálico)
+      // Precio (centrado, itálico, NEGRO)
       const itemPrice = body.appendParagraph('$' + precio.toLocaleString('es-AR'));
       itemPrice.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
       itemPrice.setFontSize(11);
       itemPrice.setItalic(true);
       itemPrice.setFontFamily('Georgia');
+      itemPrice.setForegroundColor('#000000');
 
       body.appendParagraph(''); // Espacio
       body.appendParagraph(''); // Espacio adicional
@@ -1285,12 +1321,14 @@ function generarPDFVinos() {
       cellNombre.setPaddingRight(20);
       cellNombre.getChild(0).asParagraph().setFontSize(10);
       cellNombre.getChild(0).asParagraph().setFontFamily('Georgia');
+      cellNombre.getChild(0).asParagraph().setForegroundColor('#000000'); // Negro
 
       const cellPrecio = tableRow.appendTableCell('$ ' + precio.toLocaleString('es-AR'));
       cellPrecio.setPaddingLeft(20);
       cellPrecio.getChild(0).asParagraph().setFontSize(10);
       cellPrecio.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
       cellPrecio.getChild(0).asParagraph().setFontFamily('Georgia');
+      cellPrecio.getChild(0).asParagraph().setForegroundColor('#000000'); // Negro
 
       table.setBorderWidth(0);
     });
