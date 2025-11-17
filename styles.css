@@ -467,6 +467,35 @@ img[loading="lazy"].loaded {
     font-weight: bold;
 }
 
+/* Estilos para la estructura de vinos */
+.vino-categoria-wrapper {
+    margin-bottom: 30px;
+}
+
+.vino-categoria-principal {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.vino-varietal-subcategoria {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 10px;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.vino-items-list {
+    margin-bottom: 20px;
+    padding-left: 10px;
+}
+
 .vino-table {
     display: flex;
     justify-content: space-between;
