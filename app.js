@@ -380,12 +380,15 @@ function renderVinos() {
 
     // DEBUG CRÍTICO: Log the raw wine data received from the API
     console.log('🍷 Datos de Vinos recibidos para renderizar:', menuData.vinos);
+    console.log('🍷 Total de vinos:', menuData.vinos.length);
 
     // 1. Agrupar vinos por Categoría Principal y Subcategoría (Varietal)
     const agrupado = {};
 
-    menuData.vinos.forEach(vino => {
+    menuData.vinos.forEach((vino, index) => {
         const subcategoria = vino.subcategoria || 'Otros';
+        console.log(`🍷 Vino ${index + 1}:`, vino.nombreEs, '| Subcategoría:', subcategoria);
+
         // Ejemplo: 'Tintos Argentinos - Malbec' -> 'Tintos Argentinos' y 'Malbec'
         const partes = subcategoria.split(' - ');
         const categoriaPrincipal = partes[0].trim();
@@ -400,44 +403,61 @@ function renderVinos() {
         agrupado[categoriaPrincipal][varietal].push(vino);
     });
 
+    console.log('🍷 Vinos agrupados:', agrupado);
+
     // 2. Renderizar la estructura
     for (const categoriaPrincipal in agrupado) {
+        console.log(`🍷 Renderizando categoría: ${categoriaPrincipal}`);
+
         // Contenedor envolvente para toda la categoría principal
         const categoriaWrapper = document.createElement('div');
         categoriaWrapper.className = 'vino-categoria-wrapper';
-        
+
         // Título de Categoría Principal (Ej: BLANCOS ARGENTINOS)
         const catTitle = document.createElement('h3');
         catTitle.className = 'vino-categoria-principal';
         catTitle.textContent = categoriaPrincipal.toUpperCase();
         categoriaWrapper.appendChild(catTitle);
+        console.log(`  ✅ Título de categoría creado: ${categoriaPrincipal}`);
 
         for (const varietal in agrupado[categoriaPrincipal]) {
+            console.log(`    🍷 Renderizando varietal: ${varietal}`);
+
             if (varietal) {
                 // Subtítulo de Varietal (Ej: Chardonnay)
                 const varTitle = document.createElement('h4');
                 varTitle.className = 'vino-varietal-subcategoria';
                 varTitle.textContent = varietal;
                 categoriaWrapper.appendChild(varTitle);
+                console.log(`      ✅ Subtítulo de varietal creado: ${varietal}`);
             }
 
             // Contenedor para los vinos de este varietal/subcategoría
             const itemsContainer = document.createElement('div');
             itemsContainer.className = 'vino-items-list';
-            
+
             const fragment = document.createDocumentFragment();
-            agrupado[categoriaPrincipal][varietal].forEach(vino => {
-                fragment.appendChild(createVinoItem(vino));
+            const vinosEnVarietal = agrupado[categoriaPrincipal][varietal];
+            console.log(`      🍷 Vinos en este varietal: ${vinosEnVarietal.length}`);
+
+            vinosEnVarietal.forEach(vino => {
+                const vinoElement = createVinoItem(vino);
+                console.log(`        ✅ Elemento de vino creado:`, vinoElement);
+                fragment.appendChild(vinoElement);
             });
             itemsContainer.appendChild(fragment);
-            
+
             categoriaWrapper.appendChild(itemsContainer);
         }
-        
+
         mainContainer.appendChild(categoriaWrapper);
+        console.log(`  ✅ Categoría ${categoriaPrincipal} agregada al contenedor principal`);
     }
     
     console.log('✅ Renderizado completo de la Carta de Vinos');
+    console.log('📋 Contenido final del contenedor vinos-items:', mainContainer.innerHTML.substring(0, 500));
+    console.log('📏 Altura del contenedor:', mainContainer.offsetHeight, 'px');
+    console.log('📏 Ancho del contenedor:', mainContainer.offsetWidth, 'px');
 }
 
 // ============================================
