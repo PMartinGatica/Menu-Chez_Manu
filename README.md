@@ -1,6 +1,6 @@
 # 🍽️ Chez Manu - Sistema de Menú Digital
 
-Sistema completo de gestión de menú para restaurante con Google Sheets como base de datos y actualización instantánea en el frontend.
+Sistema completo de gestión de menú para restaurante con Google Sheets como base de datos y actualización instantánea en el frontend. Incluye carta de vinos completa.
 
 ## 📋 Características
 
